@@ -27,13 +27,12 @@ public interface DriveIO {
         public Rotation2d gyroYaw = new Rotation2d();
     }
 
-    /** Updates the set of loggable inputs. */
+  /** Updates the inputs inside a DriveIOInputs to the latest values. */
   public default void updateInputs(DriveIOInputs inputs) {}
 
-  /** Run open loop at the specified voltage. */
+  /** Tell the drivetrain to run in an open-loop manner at a number of volts. */
   public default void setVoltage(double leftVolts, double rightVolts) {}
 
-  /** Run closed loop at the specified velocity. */
-  public default void setVelocity(
-      double leftRadPerSec, double rightRadPerSec, double leftFFVolts, double rightFFVolts) {}
+  /** Tell the drivetrain to run in a closed-loop manner at a velocity setpoint. */
+  public default void setVelocity(double leftRotPerSec, double rightRotPerSec) {}
 }
