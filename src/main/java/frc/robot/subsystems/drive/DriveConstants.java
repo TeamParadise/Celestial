@@ -5,19 +5,30 @@
 
 package frc.robot.subsystems.drive;
 
-/** Add your docs here. */
 public class DriveConstants {
-    public static final int leftLeaderID = 1;
-    public static final int leftFollowerID = 2;
-    public static final int rightLeaderID = 3;
-    public static final int rightFollowerID = 4;
+    public class RealConstants {
+        public static final int leftLeaderID = 1;
+        public static final int leftFollowerID = 2;
+        public static final int rightLeaderID = 3;
+        public static final int rightFollowerID = 4;
  
-    // This will need to be changed
-    public static final double gearRatio = 5.0;
+        // This will need to be changed
+        public static final double gearRatio = 5.0;
 
-    // PIDF Values (need to be tuned)
-    public static final double kP = 1.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kF = 0.0;
+        // PIDF Values (need to be tuned)
+        public static final double kP = 1.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
+    }
+
+    public class SimConstants {
+        // PIDF Values (need to be tuned)
+        public static final double kP = 1.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
+    }
 }
