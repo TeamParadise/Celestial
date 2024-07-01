@@ -17,14 +17,12 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.SimConstants;
 
 public class DriveIOSim implements DriveIO {
     // Built-in WPILib drivetrain simulation
     private DifferentialDrivetrainSim sim;
-
-    // Wheel radius value that will be grabbed after setting up our simulation
-    private double wheelRadius;
 
     // Create booleans to be used to simulate certain modes of the robot
     private boolean driveCoast = false;
@@ -47,11 +45,9 @@ public class DriveIOSim implements DriveIO {
     
     // "Constructor" class, run when the class is first initialized
     public DriveIOSim(KitbotMotor simulatedMotors, KitbotGearing gearRatio, KitbotWheelSize wheelSize) {
+        // I hate these Kitbot classes. There must be a better way to sync the real gear ratio and the sim gear ratio. I'll probably try to create a custom DifferentialDrivetrainSim class eventually.
         // Setup drivetrain simulation
         sim = DifferentialDrivetrainSim.createKitbotSim(simulatedMotors, gearRatio, wheelSize, null);
-
-        // Get the wheel radius value
-        wheelRadius = wheelSize.value / 2;
     }
 
     // In simulation, calling "updateInputs" also actually updates the simulation
@@ -61,14 +57,14 @@ public class DriveIOSim implements DriveIO {
             // Probably should document these slightly better, not right now though
             leftAppliedVolts =
                 MathUtil.clamp(
-                    leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius))
-                        + feedforward.calculate(sim.getLeftVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius)),
+                    leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / DriveConstants.metersPerRotation)
+                        + feedforward.calculate(sim.getLeftVelocityMetersPerSecond() / DriveConstants.metersPerRotation),
                     -12.0,
                     12.0);
             rightAppliedVolts =
                 MathUtil.clamp(
-                    rightPID.calculate(sim.getRightVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius))
-                        + feedforward.calculate(sim.getRightVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius)),
+                    rightPID.calculate(sim.getRightVelocityMetersPerSecond() / DriveConstants.metersPerRotation)
+                        + feedforward.calculate(sim.getRightVelocityMetersPerSecond() / DriveConstants.metersPerRotation),
                     -12.0,
                     12.0);
 
@@ -92,14 +88,14 @@ public class DriveIOSim implements DriveIO {
         sim.update(Constants.loopPeriodSecs);
 
         // Set inputs for left drive side
-        inputs.leftPositionRotations = sim.getLeftPositionMeters() / (2 * Math.PI * wheelRadius);
-        inputs.leftVelocityRotationsPerSec = sim.getLeftVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius);
+        inputs.leftPositionRotations = sim.getLeftPositionMeters() / DriveConstants.metersPerRotation;
+        inputs.leftVelocityRotationsPerSec = sim.getLeftVelocityMetersPerSecond() / DriveConstants.metersPerRotation;
         inputs.leftAppliedVolts = leftAppliedVolts;
         inputs.leftCurrentAmps = new double[] {sim.getLeftCurrentDrawAmps()};
 
         // Set inputs for right drive side
-        inputs.rightPositionRotations = sim.getRightPositionMeters() / (2 * Math.PI * wheelRadius);
-        inputs.rightVelocityRotationsPerSec = sim.getRightVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius);
+        inputs.rightPositionRotations = sim.getRightPositionMeters() / DriveConstants.metersPerRotation;
+        inputs.rightVelocityRotationsPerSec = sim.getRightVelocityMetersPerSecond() / DriveConstants.metersPerRotation;
         inputs.rightAppliedVolts = rightAppliedVolts;
         inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
 
