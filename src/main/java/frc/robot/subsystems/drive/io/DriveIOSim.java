@@ -61,19 +61,19 @@ public class DriveIOSim implements DriveIO {
             // Probably should document these slightly better, not right now though
             leftAppliedVolts =
                 MathUtil.clamp(
-                    leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / wheelRadius)
-                        + feedforward.calculate(sim.getLeftVelocityMetersPerSecond() / wheelRadius),
+                    leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius))
+                        + feedforward.calculate(sim.getLeftVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius)),
                     -12.0,
                     12.0);
             rightAppliedVolts =
                 MathUtil.clamp(
-                    rightPID.calculate(sim.getRightVelocityMetersPerSecond() / wheelRadius)
-                        + feedforward.calculate(sim.getRightVelocityMetersPerSecond() / wheelRadius),
+                    rightPID.calculate(sim.getRightVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius))
+                        + feedforward.calculate(sim.getRightVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius)),
                     -12.0,
                     12.0);
 
             // Send these values to the simulation
-            sim.setInputs(leftAppliedVolts, rightAppliedVolts)
+            sim.setInputs(leftAppliedVolts, rightAppliedVolts);
         }
 
         // If coast mode is enabled, run coast simulation
@@ -93,18 +93,46 @@ public class DriveIOSim implements DriveIO {
 
         // Set inputs for left drive side
         inputs.leftPositionRotations = sim.getLeftPositionMeters() / (2 * Math.PI * wheelRadius);
+        inputs.leftVelocityRotationsPerSec = sim.getLeftVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius);
+        inputs.leftAppliedVolts = leftAppliedVolts;
+        inputs.leftCurrentAmps = new double[] {sim.getLeftCurrentDrawAmps()};
 
+        // Set inputs for right drive side
+        inputs.rightPositionRotations = sim.getRightPositionMeters() / (2 * Math.PI * wheelRadius);
+        inputs.rightVelocityRotationsPerSec = sim.getRightVelocityMetersPerSecond() / (2 * Math.PI * wheelRadius);
+        inputs.rightAppliedVolts = rightAppliedVolts;
+        inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
+
+        // Set inputs for gyro
+        inputs.gyroYaw = sim.getHeading();
     }
 
     @Override
     public void setVoltage(double leftVolts, double rightVolts) {
-        leftLeader.setVoltage(leftVolts);
-        rightLeader.setVoltage(rightVolts);
+        // No longer running in closed loop, set closed loop to false
+        closedLoop = false;
+
+        // Ensure both values are in between -12.0 and 12.0
+        leftAppliedVolts = MathUtil.clamp(leftVolts, -12.0, 12.0);
+        rightAppliedVolts = MathUtil.clamp(rightVolts, -12.0, 12.0);
+
+        // Send values to the simulation
+        sim.setInputs(leftAppliedVolts, rightAppliedVolts);
     }
 
     @Override
-    public void setVelocity(double leftRotPerSec, double rightRotPerSec) {
-        leftPID.setSetpoint(leftRotPerSec * 60);
-        rightPID.setSetpoint(rightRotPerSec * 60);
+    public void setSpeed(double leftSpeed, double rightSpeed) {
+        // Convert speed values to voltage and set the voltage
+        setVoltage(leftSpeed * 12.0, rightSpeed * 12.0);
+    }
+
+    @Override
+    public void setVelocity(double leftMetersPerSec, double rightMetersPerSec) {
+        // Now running in closed loop, set closed loop to true
+        closedLoop = true;
+        
+        // Set the setpoint of the PID loops
+        leftPID.setSetpoint(leftMetersPerSec);
+        rightPID.setSetpoint(rightMetersPerSec);
     }
 }

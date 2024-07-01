@@ -6,14 +6,18 @@
 package frc.robot.subsystems.drive;
 
 public class DriveConstants {
+    // This will need to be changed
+    public static final double trackWidth = Units.inchesToMeters(26.0);
+    
     public class RealConstants {
         public static final int leftLeaderID = 1;
         public static final int leftFollowerID = 2;
         public static final int rightLeaderID = 3;
         public static final int rightFollowerID = 4;
  
-        // This will need to be changed
+        // These will need to be changed
         public static final double gearRatio = 5.0;
+        public static final double wheelRadius = Units.inchesToMeters(3.0);
 
         // PIDF Values (need to be tuned)
         public static final double kP = 1.0;
