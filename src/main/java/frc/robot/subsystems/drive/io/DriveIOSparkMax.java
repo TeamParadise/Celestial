@@ -9,18 +9,18 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
-import frc.robot.subsystems.drive.DriveConstants;
+import frc.robot.subsystems.drive.DriveConstants.RealConstants;
 
 public class DriveIOSparkMax implements DriveIO {
   // Create all of our basic motor objects to be used for the drivetrain
   private final CANSparkMax leftLeader =
-      new CANSparkMax(DriveConstants.leftLeaderID, MotorType.kBrushless);
+      new CANSparkMax(RealConstants.leftLeaderID, MotorType.kBrushless);
   private final CANSparkMax leftFollower =
-      new CANSparkMax(DriveConstants.leftFollowerID, MotorType.kBrushless);
+      new CANSparkMax(RealConstants.leftFollowerID, MotorType.kBrushless);
   private final CANSparkMax rightLeader =
-      new CANSparkMax(DriveConstants.rightLeaderID, MotorType.kBrushless);
+      new CANSparkMax(RealConstants.rightLeaderID, MotorType.kBrushless);
   private final CANSparkMax rightFollower =
-      new CANSparkMax(DriveConstants.rightFollowerID, MotorType.kBrushless);
+      new CANSparkMax(RealConstants.rightFollowerID, MotorType.kBrushless);
 
   // Create our PID controllers
   private final SparkPIDController leftPID = leftLeader.getPIDController();
@@ -42,15 +42,15 @@ public class DriveIOSparkMax implements DriveIO {
     rightFollower.follow(rightLeader);
 
     // Set our PIDF values for both the left and right PID controllers
-    leftPID.setP(DriveConstants.kP);
-    leftPID.setI(DriveConstants.kI);
-    leftPID.setD(DriveConstants.kD);
-    leftPID.setFF(DriveConstants.kF);
+    leftPID.setP(RealConstants.kP);
+    leftPID.setI(RealConstants.kI);
+    leftPID.setD(RealConstants.kD);
+    leftPID.setFF(RealConstants.kV);
 
-    rightPID.setP(DriveConstants.kP);
-    rightPID.setI(DriveConstants.kI);
-    rightPID.setD(DriveConstants.kD);
-    rightPID.setFF(DriveConstants.kF);
+    rightPID.setP(RealConstants.kP);
+    rightPID.setI(RealConstants.kI);
+    rightPID.setD(RealConstants.kD);
+    rightPID.setFF(RealConstants.kV);
   }
 
   @Override

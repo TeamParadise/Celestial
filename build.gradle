@@ -168,12 +168,12 @@ tasks.register("setNull") {
 // Create version file
 project.compileJava.dependsOn(createVersionFile)
 gversion {
-    srcDir       = "src/main/java/"
+    srcDir = "src/main/java/"
     classPackage = "frc.robot"
-    className    = "BuildConstants"
-    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
-    timeZone     = "America/Phoenix"
-    indent       = "  "
+    className = "BuildConstants"
+    dateFormat = "yyyy-MM-dd HH:mm:ss z"
+    timeZone = "America/Phoenix"
+    indent = "  "
 }
 
 idea {
@@ -186,7 +186,7 @@ idea {
         downloadJavadoc = true
         downloadSources = true
         // Exclude the .vscode directory from indexing and search
-        excludeDirs+=file(".vscode" )
+        excludeDirs += file(".vscode")
     }
 }
 
