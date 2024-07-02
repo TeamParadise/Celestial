@@ -7,15 +7,25 @@
 
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 import frc.robot.subsystems.drive.io.DriveIO;
 import frc.robot.subsystems.drive.io.DriveIOInputsAutoLogged;
 
@@ -29,9 +39,42 @@ public class Drive extends SubsystemBase {
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.trackWidth);
 
+  // Create a SysID object
+  private SysIdRoutine sysId;
+
   /** Class for controlling a Differential Drivetrain. */
   public Drive(DriveIO io) {
+    // Set this classes DriveIO object equal to provided DriveIO
     this.io = io;
+
+    // Configure AutoBuilder using Ramsete for PathPlanner
+    AutoBuilder.configureRamsete(
+      this::getPose, // Method to get current pose
+      this::setPose, // Method to set pose
+      () ->
+        kinematics.toChassisSpeeds(
+          new DifferentialDriveWheelSpeeds(
+            getLeftVelocityMetersPerSec(), getRightVelocityMetersPerSec())),
+      (speeds) -> {
+        var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+        driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+      },
+      new ReplanningConfig(),
+      () ->
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red,
+      this);
+
+      // Create a SysID routine
+      sysId =
+        new SysIdRoutine(
+          new SysIdRoutine.Config(
+            null,
+            null,
+            null,
+            (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
+          new SysIdRoutine.Mechanism(
+            (voltage) -> driveVolts(voltage.in(Volts), voltage.in(Volts)), null, this));
   }
 
   @Override
@@ -44,11 +87,25 @@ public class Drive extends SubsystemBase {
     odometry.update(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters());
   }
 
-  /** Tell the drivetrain to move in an open-loop manner with arcade-style controls.*/
+  /** Tell the drivetrain to move in a open-loop manner at a certain number of volts. */
+  public void driveVolts(double leftVolts, double rightVolts) {
+    io.setVoltage(leftVolts, rightVolts);
+  }
+
+  /** Tell the drivetrain to move in an open-loop manner with arcade-style controls. */
   public void driveArcade(double xSpeed, double zRotation) {
     // Use kinematics to figure out the speeds of the left and right side of the chassis
     var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
     io.setSpeed(speeds.left, speeds.right);
+  }
+
+  /** Tell the drivetrain to move in a closed-loop manner with velocity control. */
+  public void driveVelocity(double leftMetersPerSec, double rightMetersPerSec) {
+    Logger.recordOutput("Drive/ClosedLoop/Active", true);
+    Logger.recordOutput("Drive/LeftVelocitySetpointMetersPerSec", leftMetersPerSec);
+    Logger.recordOutput("Drive/RightVelocitySetpointMetersPerSec", rightMetersPerSec);
+
+    io.setVelocity(leftMetersPerSec, rightMetersPerSec);
   }
 
   /** Returns the current odometry pose in meters. */
