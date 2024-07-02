@@ -9,12 +9,8 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -25,9 +21,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
 import frc.robot.subsystems.drive.io.DriveIO;
 import frc.robot.subsystems.drive.io.DriveIOInputsAutoLogged;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 /** Class for controlling a Differential Drivetrain. */
 public class Drive extends SubsystemBase {
@@ -36,8 +33,10 @@ public class Drive extends SubsystemBase {
   private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
 
   // Create odometry and kinematics objeects
-  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
-  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.trackWidth);
+  private final DifferentialDriveOdometry odometry =
+      new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
+  private final DifferentialDriveKinematics kinematics =
+      new DifferentialDriveKinematics(DriveConstants.trackWidth);
 
   // Create a SysID object
   private SysIdRoutine sysId;
@@ -49,32 +48,32 @@ public class Drive extends SubsystemBase {
 
     // Configure AutoBuilder using Ramsete for PathPlanner
     AutoBuilder.configureRamsete(
-      this::getPose, // Method to get current pose
-      this::setPose, // Method to set pose
-      () ->
-        kinematics.toChassisSpeeds(
-          new DifferentialDriveWheelSpeeds(
-            getLeftVelocityMetersPerSec(), getRightVelocityMetersPerSec())),
-      (speeds) -> {
-        var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-        driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
-      },
-      new ReplanningConfig(),
-      () ->
-        DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get() == Alliance.Red,
-      this);
+        this::getPose, // Method to get current pose
+        this::setPose, // Method to set pose
+        () ->
+            kinematics.toChassisSpeeds(
+                new DifferentialDriveWheelSpeeds(
+                    getLeftVelocityMetersPerSec(), getRightVelocityMetersPerSec())),
+        (speeds) -> {
+          var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+          driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+        },
+        new ReplanningConfig(),
+        () ->
+            DriverStation.getAlliance().isPresent()
+                && DriverStation.getAlliance().get() == Alliance.Red,
+        this);
 
-      // Create a SysID routine
-      sysId =
+    // Create a SysID routine
+    sysId =
         new SysIdRoutine(
-          new SysIdRoutine.Config(
-            null,
-            null,
-            null,
-            (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
-          new SysIdRoutine.Mechanism(
-            (voltage) -> driveVolts(voltage.in(Volts), voltage.in(Volts)), null, this));
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> driveVolts(voltage.in(Volts), voltage.in(Volts)), null, this));
   }
 
   @Override

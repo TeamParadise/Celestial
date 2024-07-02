@@ -7,6 +7,6 @@ package frc.robot;
 
 /** Add your docs here. */
 public class Constants {
-    public static final boolean tuningMode = false;
-    public static final double loopPeriodSecs = 0.02;
+  public static final boolean tuningMode = false;
+  public static final double loopPeriodSecs = 0.02;
 }

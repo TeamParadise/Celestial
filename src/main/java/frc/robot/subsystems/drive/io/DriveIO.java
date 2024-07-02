@@ -32,25 +32,28 @@ public interface DriveIO {
   /** Updates the inputs inside a DriveIOInputs to the latest values. */
   default void updateInputs(DriveIOInputs inputs) {}
 
-  /** Tell the drivetrain to run in an open-loop manner at a number of volts.
-   * 
+  /**
+   * Tell the drivetrain to run in an open-loop manner at a number of volts.
+   *
    * @param leftVolts The left voltage to set. Value should be in between -12.0 and 12.0.
    * @param rightVolts The right voltage to set. Value should be in between -12.0 and 12.0.
    */
   default void setVoltage(double leftVolts, double rightVolts) {}
 
-  /** Tell the drivetrain to run in an open-loop manner at a specific speed.
-   * 
+  /**
+   * Tell the drivetrain to run in an open-loop manner at a specific speed.
+   *
    * @param leftSpeed The left speed to set. Value is in between -1.0 and 1.0.
    * @param rightSpeed The right speed to set. Value is in between -1.0 and 1.0.
    */
   default void setSpeed(double leftSpeed, double rightSpeed) {}
 
-  /** Tell the drivetrain to run in a closed-loop manner at a velocity setpoint. 
-   * 
+  /**
+   * Tell the drivetrain to run in a closed-loop manner at a velocity setpoint.
+   *
    * @param leftMetersPerSec The left velocity to set. Value is in meters per second.
    * @param rightMetersPerSec The right velocity to set. Value is in meter sper second.
-  */
+   */
   default void setVelocity(double leftMetersPerSec, double rightMetersPerSec) {}
 
   /** Enable or disable brake mode on the drivetrain. */

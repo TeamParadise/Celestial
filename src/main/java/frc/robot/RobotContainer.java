@@ -19,13 +19,19 @@ public class RobotContainer {
 
   // Create controller(s)
   private final CommandXboxController controller = new CommandXboxController(0);
+
   public RobotContainer() {
-    drive = new Drive(new DriveIOSim(KitbotMotor.kDoubleNEOPerSide, KitbotGearing.k8p45, KitbotWheelSize.kSixInch));
+    drive =
+        new Drive(
+            new DriveIOSim(
+                KitbotMotor.kDoubleNEOPerSide, KitbotGearing.k8p45, KitbotWheelSize.kSixInch));
     configureBindings();
   }
 
   private void configureBindings() {
-    drive.setDefaultCommand(Commands.run(() -> drive.driveArcade(-controller.getLeftY(), controller.getRightX()), drive));
+    drive.setDefaultCommand(
+        Commands.run(
+            () -> drive.driveArcade(-controller.getLeftY(), controller.getRightX()), drive));
   }
 
   public Command getAutonomousCommand() {
