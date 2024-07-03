@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface DriveIO {
   /** Class used to log the inputs from a Differential Drivetrain */
   @AutoLog
-  public static class DriveIOInputs {
+  class DriveIOInputs {
     // Left drive inputs
     public double leftPositionRotations = 0.0;
     public double leftVelocityRotationsPerSec = 0.0;
@@ -26,6 +26,9 @@ public interface DriveIO {
     public double rightVelocityRotationsPerSec = 0.0;
     public double rightAppliedVolts = 0.0;
     public double[] rightCurrentAmps = new double[] {};
+
+    // Simulated gyro yaw (for simulation)
+    public Rotation2d simulatedYaw = null;
   }
 
   /** Updates the inputs inside a DriveIOInputs to the latest values. */

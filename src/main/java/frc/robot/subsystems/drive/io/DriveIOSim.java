@@ -10,8 +10,6 @@ package frc.robot.subsystems.drive.io;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
@@ -22,24 +20,19 @@ import frc.robot.subsystems.drive.DriveConstants.SimConstants;
 
 public class DriveIOSim implements DriveIO {
   // Built-in WPILib drivetrain simulation
-  private DifferentialDrivetrainSim sim;
+  private final DifferentialDrivetrainSim sim;
 
   // Create booleans to be used to simulate certain modes of the robot
-  private boolean driveCoast = false;
   private boolean closedLoop = false;
-
-  // Create limiters for coast mode slowdown
-  private final SlewRateLimiter leftVoltsLimiter = new SlewRateLimiter(1.0);
-  private final SlewRateLimiter rightVoltsLimiter = new SlewRateLimiter(1.0);
 
   // Store simulated drivetrain voltage values
   private double leftAppliedVolts = 0.0;
   private double rightAppliedVolts = 0.0;
 
   // Create PID controller for both sides (need to create some sort of sim pid values)
-  private PIDController leftPID =
+  private final PIDController leftPID =
       new PIDController(SimConstants.kP, SimConstants.kI, SimConstants.kD);
-  private PIDController rightPID =
+  private final PIDController rightPID =
       new PIDController(SimConstants.kP, SimConstants.kI, SimConstants.kD);
 
   // Create feedforward controller to calculate feedforward values
@@ -82,18 +75,6 @@ public class DriveIOSim implements DriveIO {
       sim.setInputs(leftAppliedVolts, rightAppliedVolts);
     }
 
-    // If coast mode is enabled, run coast simulation
-    if (driveCoast) {
-      if (DriverStation.isDisabled()) {
-        // Stop motors, but prevent the voltage from lowering too quickly
-        setVoltage(leftVoltsLimiter.calculate(0.0), rightVoltsLimiter.calculate(0.0));
-      } else {
-        // Reset the value for the voltage limiter to be based off of
-        leftVoltsLimiter.reset(leftAppliedVolts);
-        rightVoltsLimiter.reset(rightAppliedVolts);
-      }
-    }
-
     // Update simulation with current values
     sim.update(Constants.loopPeriodSecs);
 
@@ -111,8 +92,8 @@ public class DriveIOSim implements DriveIO {
     inputs.rightAppliedVolts = rightAppliedVolts;
     inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
 
-    // Set inputs for gyro
-    inputs.gyroYaw = sim.getHeading();
+    // Set inputs for simulated heading
+    inputs.simulatedYaw = sim.getHeading();
   }
 
   @Override

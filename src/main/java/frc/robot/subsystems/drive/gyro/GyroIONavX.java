@@ -6,7 +6,6 @@
 package frc.robot.subsystems.drive.gyro;
 
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -24,7 +23,8 @@ public class GyroIONavX implements GyroIO {
       // Reset the gyro
       gyro.reset();
     } catch (RuntimeException ex) {
-      System.out.print("The Kauai Labs navX-MXP Gyro has failed to initialize! Unexpected behavior may happen!");
+      System.out.print(
+          "The Kauai Labs navX-MXP Gyro has failed to initialize! Unexpected behavior may happen!");
       DriverStation.reportWarning("Gyro failed to initialize!", false);
     }
   }

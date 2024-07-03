@@ -6,11 +6,11 @@
 package frc.robot.subsystems.drive.io;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.RealConstants;
 
@@ -86,9 +86,6 @@ public class DriveIOSparkMax implements DriveIO {
     inputs.rightAppliedVolts = rightLeader.getAppliedOutput() * rightLeader.getBusVoltage();
     inputs.rightCurrentAmps =
         new double[] {rightLeader.getOutputCurrent(), rightFollower.getOutputCurrent()};
-
-    // Gyro isn't implemented yet in real hardware, will finish later
-    inputs.gyroYaw = new Rotation2d();
   }
 
   @Override
@@ -115,5 +112,11 @@ public class DriveIOSparkMax implements DriveIO {
         leftMetersPerSec / DriveConstants.metersPerRotation * 60, ControlType.kVelocity);
     rightPID.setReference(
         rightMetersPerSec / DriveConstants.metersPerRotation * 60, ControlType.kVelocity);
+  }
+
+  @Override
+  public void setBrakeMode(boolean enable) {
+    leftLeader.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    rightLeader.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
   }
 }

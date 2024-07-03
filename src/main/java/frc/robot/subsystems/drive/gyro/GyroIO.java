@@ -25,7 +25,7 @@ public interface GyroIO {
   default void updateInputs(GyroIOInputs inputs) {}
 
   /**
-   * Tell the gyro to change the current yaw
+   * Tell the gyro to change the current yaw.
    *
    * @param yawDegrees The number of degrees to set the yaw to. Value should be in between 0 - 360.
    */

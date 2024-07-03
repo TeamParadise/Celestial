@@ -21,6 +21,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Robot;
+import frc.robot.subsystems.drive.gyro.GyroIO;
+import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.drive.io.DriveIO;
 import frc.robot.subsystems.drive.io.DriveIOInputsAutoLogged;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -32,6 +35,10 @@ public class Drive extends SubsystemBase {
   private final DriveIO io;
   private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
 
+  // GyroIO objects
+  private GyroIO gyroIO;
+  private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+
   // Create odometry and kinematics objeects
   private final DifferentialDriveOdometry odometry =
       new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
@@ -42,10 +49,25 @@ public class Drive extends SubsystemBase {
   private SysIdRoutine sysId;
 
   /** Class for controlling a Differential Drivetrain. */
+  public Drive(DriveIO io, GyroIO gyroIO) {
+    // Set this classes IO objects equal to the provided IO classes
+    this.io = io;
+    this.gyroIO = gyroIO;
+
+    // Call function to configure PathPlanner and SysID
+    configure();
+  }
+
+  /** Class for controlling a Differential Drivetrain in a simulation. */
   public Drive(DriveIO io) {
-    // Set this classes DriveIO object equal to provided DriveIO
+    // Set this classes IO objects equal to the provided IO classes
     this.io = io;
 
+    // Call function to configure PathPlanner and SysID
+    configure();
+  }
+
+  private void configure() {
     // Configure AutoBuilder using Ramsete for PathPlanner
     AutoBuilder.configureRamsete(
         this::getPose, // Method to get current pose
@@ -82,8 +104,16 @@ public class Drive extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Drive", inputs);
 
-    // Update the odometry of the drivetrain
-    odometry.update(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters());
+    // Use AdvantageKit modes for this eventually
+    if (Robot.isReal()) {
+      // Update and log inputs from the gyro and update odometry
+      gyroIO.updateInputs(gyroInputs);
+      Logger.processInputs("Drive/Gyro", gyroInputs);
+      odometry.update(gyroInputs.yaw, getLeftPositionMeters(), getRightPositionMeters());
+    } else {
+      // No gyro is used in simulation, so use the simulated yaw
+      odometry.update(inputs.simulatedYaw, getLeftPositionMeters(), getRightPositionMeters());
+    }
   }
 
   /** Tell the drivetrain to move in a open-loop manner at a certain number of volts. */
@@ -115,7 +145,13 @@ public class Drive extends SubsystemBase {
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
-    odometry.resetPosition(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+    if (Robot.isReal()) {
+      odometry.resetPosition(
+          gyroInputs.yaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+    } else {
+      odometry.resetPosition(
+          inputs.simulatedYaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+    }
   }
 
   /** Returns the position of the left wheels in meters. */
