@@ -14,9 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.RealConstants;
 
-/**
- * Drive IO implementation for a SPARK MAX (NEO) based drivetrain.
- */
+/** Drive IO implementation for a SPARK MAX (NEO) based drivetrain. */
 public class DriveIOSparkMax implements DriveIO {
   // Create all of our basic motor objects to be used for the drivetrain
   private final CANSparkMax leftLeader =

@@ -10,7 +10,9 @@ package frc.robot.subsystems.drive.io;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
+/** Basic IO implementation for a Differential Drivetrain with four motors. */
 public interface DriveIO {
+  /** Class used to log the inputs from a Differential Drivetrain */
   @AutoLog
   public static class DriveIOInputs {
     // Left drive inputs
@@ -24,9 +26,6 @@ public interface DriveIO {
     public double rightVelocityRotationsPerSec = 0.0;
     public double rightAppliedVolts = 0.0;
     public double[] rightCurrentAmps = new double[] {};
-
-    // Not sure if this robot will have a gyro yet.
-    public Rotation2d gyroYaw = new Rotation2d();
   }
 
   /** Updates the inputs inside a DriveIOInputs to the latest values. */
@@ -52,7 +51,7 @@ public interface DriveIO {
    * Tell the drivetrain to run in a closed-loop manner at a velocity setpoint.
    *
    * @param leftMetersPerSec The left velocity to set. Value is in meters per second.
-   * @param rightMetersPerSec The right velocity to set. Value is in meter sper second.
+   * @param rightMetersPerSec The right velocity to set. Value is in meters per second.
    */
   default void setVelocity(double leftMetersPerSec, double rightMetersPerSec) {}
 

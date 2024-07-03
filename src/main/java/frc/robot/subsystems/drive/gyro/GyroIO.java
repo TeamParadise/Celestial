@@ -7,7 +7,27 @@
 
 package frc.robot.subsystems.drive.gyro;
 
-/** Basic IO implementation for a Gyro. */
-public class GyroIO {
+import edu.wpi.first.math.geometry.Rotation2d;
+import org.littletonrobotics.junction.AutoLog;
 
+/** Basic IO implementation for a Drivetrain Gyro. */
+public interface GyroIO {
+  /** Class used to log the inputs from a Drivetrain Gyro. */
+  @AutoLog
+  class GyroIOInputs {
+    public boolean connected = false;
+    public Rotation2d yaw = new Rotation2d();
+    public Rotation2d[] odometryYawPositions = new Rotation2d[] {};
+    public double yawVelocityDegreesPerSecond = 0.0;
+  }
+
+  /** Updates the inputs inside a GyroIOInputs to the latest values. */
+  default void updateInputs(GyroIOInputs inputs) {}
+
+  /**
+   * Tell the gyro to change the current yaw
+   *
+   * @param yawDegrees The number of degrees to set the yaw to. Value should be in between 0 - 360.
+   */
+  default void setYaw(double yawDegrees) {}
 }
