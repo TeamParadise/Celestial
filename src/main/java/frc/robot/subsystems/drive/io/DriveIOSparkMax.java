@@ -8,9 +8,15 @@ package frc.robot.subsystems.drive.io;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.RealConstants;
 
+/**
+ * Drive IO implementation for a SPARK MAX (NEO) based drivetrain.
+ */
 public class DriveIOSparkMax implements DriveIO {
   // Create all of our basic motor objects to be used for the drivetrain
   private final CANSparkMax leftLeader =
@@ -21,6 +27,10 @@ public class DriveIOSparkMax implements DriveIO {
       new CANSparkMax(RealConstants.rightLeaderID, MotorType.kBrushless);
   private final CANSparkMax rightFollower =
       new CANSparkMax(RealConstants.rightFollowerID, MotorType.kBrushless);
+
+  // Get encoders for the motors
+  private final RelativeEncoder leftEncoder = leftLeader.getEncoder();
+  private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
 
   // Create our PID controllers
   private final SparkPIDController leftPID = leftLeader.getPIDController();
@@ -41,6 +51,10 @@ public class DriveIOSparkMax implements DriveIO {
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
 
+    // Set current limits to protect motors
+    leftLeader.setSmartCurrentLimit(60);
+    leftLeader.setSmartCurrentLimit(60);
+
     // Set our PIDF values for both the left and right PID controllers
     leftPID.setP(RealConstants.kP);
     leftPID.setI(RealConstants.kI);
@@ -51,12 +65,46 @@ public class DriveIOSparkMax implements DriveIO {
     rightPID.setI(RealConstants.kI);
     rightPID.setD(RealConstants.kD);
     rightPID.setFF(RealConstants.kV);
+
+    // Burn settings to the flash of all the motors
+    leftLeader.burnFlash();
+    leftFollower.burnFlash();
+    rightLeader.burnFlash();
+    rightFollower.burnFlash();
+  }
+
+  @Override
+  public void updateInputs(DriveIOInputs inputs) {
+    // Set inputs for left drive side
+    inputs.leftPositionRotations = leftEncoder.getPosition() / DriveConstants.gearRatio;
+    inputs.leftVelocityRotationsPerSec = leftEncoder.getVelocity() / DriveConstants.gearRatio;
+    inputs.leftAppliedVolts = leftLeader.getAppliedOutput() * leftLeader.getBusVoltage();
+    inputs.leftCurrentAmps =
+        new double[] {leftLeader.getOutputCurrent(), leftFollower.getOutputCurrent()};
+
+    // Set inputs for right drive side
+    inputs.rightPositionRotations = rightEncoder.getPosition() / DriveConstants.gearRatio;
+    inputs.rightVelocityRotationsPerSec = rightEncoder.getVelocity() / DriveConstants.gearRatio;
+    inputs.rightAppliedVolts = rightLeader.getAppliedOutput() * rightLeader.getBusVoltage();
+    inputs.rightCurrentAmps =
+        new double[] {rightLeader.getOutputCurrent(), rightFollower.getOutputCurrent()};
+
+    // Gyro isn't implemented yet in real hardware, will finish later
+    inputs.gyroYaw = new Rotation2d();
   }
 
   @Override
   public void setVoltage(double leftVolts, double rightVolts) {
+    // Set voltage of both motors
     leftLeader.setVoltage(leftVolts);
     rightLeader.setVoltage(rightVolts);
+  }
+
+  @Override
+  public void setSpeed(double leftSpeed, double rightSpeed) {
+    // Set speed of both motors
+    leftLeader.set(leftSpeed);
+    rightLeader.set(rightSpeed);
   }
 
   @Override
