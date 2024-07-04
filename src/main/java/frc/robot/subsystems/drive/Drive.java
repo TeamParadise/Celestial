@@ -116,13 +116,17 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  /** Tell the drivetrain to move in a open-loop manner at a certain number of volts. */
+  /** Tell the drivetrain to move in an open-loop manner at a certain number of volts. */
   public void driveVolts(double leftVolts, double rightVolts) {
+    Logger.recordOutput("Drive/ClosedLoop/Active", false);
+
     io.setVoltage(leftVolts, rightVolts);
   }
 
   /** Tell the drivetrain to move in an open-loop manner with arcade-style controls. */
   public void driveArcade(double xSpeed, double zRotation) {
+    Logger.recordOutput("Drive/ClosedLoop/Active", false);
+
     // Use kinematics to figure out the speeds of the left and right side of the chassis
     var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
     io.setSpeed(speeds.left, speeds.right);

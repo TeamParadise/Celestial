@@ -15,7 +15,7 @@ public class DriveConstants {
 
   public static final double metersPerRotation = 2 * Math.PI * Units.inchesToMeters(wheelRadius);
 
-  public class RealConstants {
+  public static class RealConstants {
     public static final int leftLeaderID = 1;
     public static final int leftFollowerID = 2;
     public static final int rightLeaderID = 3;
@@ -29,7 +29,7 @@ public class DriveConstants {
     public static final double kV = 0.0;
   }
 
-  public class SimConstants {
+  public static class SimConstants {
     // PIDF Values (need to be tuned)
     public static final double kP = 1.0;
     public static final double kI = 0.0;
