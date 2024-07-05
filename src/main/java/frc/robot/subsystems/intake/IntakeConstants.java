@@ -6,22 +6,8 @@
 package frc.robot.subsystems.intake;
 
 public class IntakeConstants {
-  public static class FeederConstants {
+  public static class FollowerConstants {
     public static int motorID = 6;
-
-    // PIDF Values (need to be tuned)
-    public static final double kP = 1.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
-
-    // Preset speeds for feeder
-    public static class FeederSpeeds {
-      // Need to be tuned
-      public static final double intake = -1000;
-      public static final double feed = 1000;
-    }
   }
 
   public static int motorID = 5;
@@ -33,10 +19,10 @@ public class IntakeConstants {
   public static final double kS = 0.0;
   public static final double kV = 0.0;
 
-  // Preset speeds for intake
-  public static class IntakeSpeeds {
+  // Preset speeds for feeder
+  public static class FeederSpeeds {
     // Need to be tuned
-    public static final double intake = 1000;
+    public static final double intake = -1000;
     public static final double feed = 1000;
   }
 }

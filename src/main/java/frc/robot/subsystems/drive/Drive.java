@@ -39,7 +39,7 @@ public class Drive extends SubsystemBase {
   private GyroIO gyroIO;
   private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
 
-  // Create odometry and kinematics objeects
+  // Create odometry and kinematics objects
   private final DifferentialDriveOdometry odometry =
       new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
   private final DifferentialDriveKinematics kinematics =

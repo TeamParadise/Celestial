@@ -12,17 +12,11 @@ public interface IntakeIO {
   /** Class to log the inputs from an Intake. */
   @AutoLog
   class IntakeIOInputs {
-    // Feeder (top) wheel inputs
-    public double feederPositionRotations = 0.0;
-    public double feederVelocityRPM = 0.0;
-    public double feederAppliedVolts = 0.0;
-    public double feederCurrentAmps = 0.0;
-
-    // Intake (bottom) wheel inputs
+    // Top wheel inputs
     public double intakePositionRotations = 0.0;
     public double intakeVelocityRPM = 0.0;
     public double intakeAppliedVolts = 0.0;
-    public double intakeCurrentAmps = 0.0;
+    public double[] intakeCurrentAmps = new double[] {};
   }
 
   /** Updates the inputs inside an IntakeIOInputs to the latest values. */
@@ -31,24 +25,21 @@ public interface IntakeIO {
   /**
    * Tell the intake to run in an open-loop manner at a number of volts.
    *
-   * @param feederVolts The feeder voltage to set. Value should be in between -12.0 and 12.0.
    * @param intakeVolts The intake voltage to set. Value should be in between -12.0 and 12.0.
    */
-  default void setVoltage(double feederVolts, double intakeVolts) {}
+  default void setVoltage(double intakeVolts) {}
 
   /**
    * Tell the intake to run in an open-loop manner at a specific speed.
    *
-   * @param feederSpeed The feeder speed to set. Value is in between -1.0 and 1.0.
    * @param intakeSpeed The intake speed to set. Value is in between -1.0 and 1.0.
    */
-  default void setSpeed(double feederSpeed, double intakeSpeed) {}
+  default void setSpeed(double intakeSpeed) {}
 
   /**
    * Tell the intake to run in a closed-loop manner at a velocity setpoint.
    *
-   * @param feederRPM The left velocity to set. Value is in rotations per minute.
-   * @param intakeRPM The right velocity to set. Value is in rotations per minute.
+   * @param intakeRPM The intake velocity to set. Value is in rotations per minute.
    */
-  default void setVelocity(double feederRPM, double intakeRPM) {}
+  default void setVelocity(double intakeRPM) {}
 }
