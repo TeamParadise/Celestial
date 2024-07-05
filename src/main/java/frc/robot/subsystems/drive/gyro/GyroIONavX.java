@@ -15,6 +15,7 @@ public class GyroIONavX implements GyroIO {
   // Variable to store Gyro/AHRS object
   private AHRS gyro;
 
+  /** Drivetrain Gyro IO implementation for a Kauai Labs navX(2)-MXP on the SPI interface. */
   public GyroIONavX() {
     try {
       // Try to create Gyro/AHRS object

@@ -6,5 +6,18 @@
 package frc.robot.subsystems.flywheels;
 
 public class FlywheelsConstants {
+  public static class TopConstants {
+    public static int motorID = 7;
+  }
 
+  public static class BottomConstants {
+    public static int motorID = 8;
+  }
+
+  // PIDF Values (need to be tuned)
+  public static final double kP = 0.0;
+  public static final double kI = 0.0;
+  public static final double kD = 0.0;
+  public static final double kS = 0.0;
+  public static final double kV = 0.0;
 }

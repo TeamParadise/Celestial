@@ -24,4 +24,28 @@ public interface FlywheelsIO {
     public double bottomAppliedVolts = 0.0;
     public double bottomCurrentAmps = 0.0;
   }
+
+  /** Updates the inputs inside an FlywheelsIOInputs to the latest values. */
+  default void updateInputs(FlywheelsIOInputs inputs) {}
+
+  /**
+   * Tell the flywheels to run in an open-loop manner at a number of volts.
+   *
+   * @param flywheelVolts The flywheel voltage to set. Value should be in between -12.0 and 12.0.
+   */
+  default void setVoltage(double flywheelVolts) {}
+
+  /**
+   * Tell the flywheels to run in an open-loop manner at a specific speed.
+   *
+   * @param flywheelSpeed The flywheel speed to set. Value is in between -1.0 and 1.0.
+   */
+  default void setSpeed(double flywheelSpeed) {}
+
+  /**
+   * Tell the flywheels to run in a closed-loop manner at a velocity setpoint.
+   *
+   * @param flywheelRPM The flywheel velocity to set. Value is in rotations per minute.
+   */
+  default void setVelocity(double flywheelRPM) {}
 }

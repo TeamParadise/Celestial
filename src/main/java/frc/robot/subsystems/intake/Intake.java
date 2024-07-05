@@ -5,7 +5,6 @@
 
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.io.IntakeIO;
 import frc.robot.subsystems.intake.io.IntakeIOInputsAutoLogged;
@@ -31,14 +30,14 @@ public class Intake extends SubsystemBase {
   }
 
   /** Tell the intake to run in an open-loop manner at a certain number of volts. */
-  public void driveVolts(double intakeVolts) {
+  public void setVolts(double intakeVolts) {
     Logger.recordOutput("Intake/ClosedLoop/Active", false);
 
     io.setVoltage(intakeVolts);
   }
 
   /** Tell the intake to run in a closed-loop manner with velocity control. */
-  public void driveVelocity(double intakeRPM) {
+  public void setVelocity(double intakeRPM) {
     Logger.recordOutput("Intake/ClosedLoop/Active", true);
     Logger.recordOutput("Intake/VelocitySetpointRPM", intakeRPM);
 

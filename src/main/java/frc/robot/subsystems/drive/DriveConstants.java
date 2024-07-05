@@ -22,7 +22,7 @@ public class DriveConstants {
     public static final int rightFollowerID = 4;
 
     // PIDF Values (need to be tuned)
-    public static final double kP = 1.0;
+    public static final double kP = 0.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     public static final double kS = 0.0;

@@ -58,7 +58,8 @@ public class IntakeIOSparkMax implements IntakeIO {
     inputs.intakePositionRotations = intakeEncoder.getPosition();
     inputs.intakeVelocityRPM = intakeEncoder.getVelocity();
     inputs.intakeAppliedVolts = intakeLeader.getAppliedOutput() * intakeLeader.getBusVoltage();
-    inputs.intakeCurrentAmps = new double[] {intakeLeader.getOutputCurrent(), intakeFollower.getOutputCurrent()};
+    inputs.intakeCurrentAmps =
+        new double[] {intakeLeader.getOutputCurrent(), intakeFollower.getOutputCurrent()};
   }
 
   @Override
@@ -74,7 +75,7 @@ public class IntakeIOSparkMax implements IntakeIO {
   }
 
   @Override
-  public void setVelocity( double intakeRPM) {
+  public void setVelocity(double intakeRPM) {
     // I'm not sure how the REV "Motion Magic" alternative works (or if it's even still supported)
     // might want to try it though
 

@@ -5,7 +5,7 @@
 
 package frc.robot;
 
-/** Add your docs here. */
+/** Constants to be used throughout the whole robot. */
 public class Constants {
   public static final boolean tuningMode = false;
   public static final double loopPeriodSecs = 0.02;
