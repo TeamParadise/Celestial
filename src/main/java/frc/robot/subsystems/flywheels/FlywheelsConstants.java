@@ -20,4 +20,8 @@ public class FlywheelsConstants {
   public static final double kD = 0.0;
   public static final double kS = 0.0;
   public static final double kV = 0.0;
+
+  public static class Presets {
+    public static final double intake = -1000;
+  }
 }

@@ -12,10 +12,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.io.DriveIOSim;
+import frc.robot.subsystems.flywheels.Flywheels;
+import frc.robot.subsystems.flywheels.io.FlywheelsIOSparkMax;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.io.IntakeIOSparkMax;
 
 public class RobotContainer {
   // Create subsystems
-  public final Drive drive;
+  public static Drive drive;
+  public static Intake intake;
+  public static Flywheels flywheels;
 
   // Create controller(s)
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -25,6 +31,8 @@ public class RobotContainer {
         new Drive(
             new DriveIOSim(
                 KitbotMotor.kDoubleNEOPerSide, KitbotGearing.k8p45, KitbotWheelSize.kSixInch));
+    intake = new Intake(new IntakeIOSparkMax());
+    flywheels = new Flywheels(new FlywheelsIOSparkMax());
     configureBindings();
   }
 
