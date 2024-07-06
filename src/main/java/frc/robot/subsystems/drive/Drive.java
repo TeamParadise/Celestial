@@ -22,10 +22,12 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
+import frc.robot.subsystems.drive.DriveConstants.RealConstants;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.drive.io.DriveIO;
 import frc.robot.subsystems.drive.io.DriveIOInputsAutoLogged;
+import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -47,6 +49,26 @@ public class Drive extends SubsystemBase {
 
   // Create a SysID object
   private SysIdRoutine sysId;
+
+  // Set PID values for the left drive to allow them to be tuned
+  private static final LoggedTunableNumber leftP =
+      new LoggedTunableNumber("Drive/Tuning/Left/P", RealConstants.leftP);
+  private static final LoggedTunableNumber leftI =
+      new LoggedTunableNumber("Drive/Tuning/Left/I", RealConstants.leftI);
+  private static final LoggedTunableNumber leftD =
+      new LoggedTunableNumber("Drive/Tuning/Left/D", RealConstants.leftD);
+  private static final LoggedTunableNumber leftF =
+      new LoggedTunableNumber("Drive/Tuning/Left/F", RealConstants.leftF);
+
+  // Set PID values for the right drive to allow them to be tuned
+  private static final LoggedTunableNumber rightP =
+      new LoggedTunableNumber("Drive/Tuning/Right/P", RealConstants.rightP);
+  private static final LoggedTunableNumber rightI =
+      new LoggedTunableNumber("Drive/Tuning/Right/I", RealConstants.rightI);
+  private static final LoggedTunableNumber rightD =
+      new LoggedTunableNumber("Drive/Tuning/Right/D", RealConstants.rightD);
+  private static final LoggedTunableNumber rightF =
+      new LoggedTunableNumber("Drive/Tuning/Right/F", RealConstants.rightF);
 
   /** Class for controlling a Differential Drivetrain. */
   public Drive(DriveIO io, GyroIO gyroIO) {
@@ -103,6 +125,15 @@ public class Drive extends SubsystemBase {
     // Update and log inputs from the drivetrain
     io.updateInputs(inputs);
     Logger.processInputs("Drive", inputs);
+
+    // Update PIDF values if changed in tuning mode
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> io.setLeftPID(leftP.get(), leftI.get(), leftD.get(), leftF.get()),
+        leftP,
+        leftI,
+        leftD,
+        leftF);
 
     // Use AdvantageKit modes for this eventually
     if (Robot.isReal()) {

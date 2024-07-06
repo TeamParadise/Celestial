@@ -18,6 +18,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.SimConstants;
 
+/** Drive IO implementation for a simulated differential drivetrain */
 public class DriveIOSim implements DriveIO {
   // Built-in WPILib drivetrain simulation
   private final DifferentialDrivetrainSim sim;
@@ -36,8 +37,7 @@ public class DriveIOSim implements DriveIO {
       new PIDController(SimConstants.kP, SimConstants.kI, SimConstants.kD);
 
   // Create feedforward controller to calculate feedforward values
-  private final SimpleMotorFeedforward feedforward =
-      new SimpleMotorFeedforward(SimConstants.kV, SimConstants.kS);
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SimConstants.kF, 0);
 
   // "Constructor" class, run when the class is first initialized
   public DriveIOSim(
@@ -53,7 +53,8 @@ public class DriveIOSim implements DriveIO {
   public void updateInputs(DriveIOInputs inputs) {
     // If we are in closed-loop control, run PID and feedforward calculations
     if (closedLoop) {
-      // Probably should document these slightly better, not right now though
+      // Calculate the PID and feedforward values for the left and right side, and clamp them to a
+      // minimum of -12 volts and a maximum of 12 volts.
       leftAppliedVolts =
           MathUtil.clamp(
               leftPID.calculate(

@@ -20,7 +20,7 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
   private final CANSparkMax topFlywheel =
       new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
   private final CANSparkMax bottomFlywheel =
-      new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
+      new CANSparkMax(BottomConstants.motorID, MotorType.kBrushless);
 
   // Get encoder for the motor
   private final RelativeEncoder topEncoder = topFlywheel.getEncoder();

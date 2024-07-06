@@ -60,4 +60,10 @@ public interface DriveIO {
 
   /** Enable or disable brake mode on the drivetrain. */
   default void setBrakeMode(boolean enable) {}
+
+  /** Change the PIDF values on the left side of the drivetrain. */
+  default void setLeftPID(double leftP, double leftI, double leftD, double leftF) {}
+
+  /** Change the PIDF values on the right side of the drivetrain. */
+  default void setRightPID(double rightP, double rightI, double rightD, double rightF) {}
 }

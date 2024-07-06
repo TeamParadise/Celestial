@@ -21,12 +21,17 @@ public class DriveConstants {
     public static final int rightLeaderID = 3;
     public static final int rightFollowerID = 4;
 
-    // PIDF Values (need to be tuned)
-    public static final double kP = 0.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
+    // Left PIDF Values (need to be tuned)
+    public static final double leftP = 0.0;
+    public static final double leftI = 0.0;
+    public static final double leftD = 0.0;
+    public static final double leftF = 0.0;
+
+    // Right PIDF Values (need to be tuned)
+    public static final double rightP = 0.0;
+    public static final double rightI = 0.0;
+    public static final double rightD = 0.0;
+    public static final double rightF = 0.0;
   }
 
   public static class SimConstants {
@@ -34,7 +39,6 @@ public class DriveConstants {
     public static final double kP = 1.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
+    public static final double kF = 0.0;
   }
 }

@@ -34,13 +34,19 @@ public class DriveIOSparkMax implements DriveIO {
   private final SparkPIDController leftPID = leftLeader.getPIDController();
   private final SparkPIDController rightPID = rightLeader.getPIDController();
 
-  // "Constructor" class, run when the class is first initialized
+  /** Drive IO implementation for a SPARK MAX (NEO) based drivetrain. */
   public DriveIOSparkMax() {
     // Reset all motor controllers to factory defaults, ensures only settings here are modified
     leftLeader.restoreFactoryDefaults();
     leftFollower.restoreFactoryDefaults();
     rightLeader.restoreFactoryDefaults();
     rightFollower.restoreFactoryDefaults();
+
+    // Set current limits to protect motors
+    leftLeader.setSmartCurrentLimit(60);
+    leftFollower.setSmartCurrentLimit(60);
+    rightLeader.setSmartCurrentLimit(60);
+    rightFollower.setSmartCurrentLimit(60);
 
     // Invert right side of the drivetrain
     rightLeader.setInverted(true);
@@ -49,20 +55,16 @@ public class DriveIOSparkMax implements DriveIO {
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
 
-    // Set current limits to protect motors
-    leftLeader.setSmartCurrentLimit(60);
-    leftLeader.setSmartCurrentLimit(60);
-
     // Set our PIDF values for both the left and right PID controllers
-    leftPID.setP(RealConstants.kP);
-    leftPID.setI(RealConstants.kI);
-    leftPID.setD(RealConstants.kD);
-    leftPID.setFF(RealConstants.kV);
+    leftPID.setP(RealConstants.leftP);
+    leftPID.setI(RealConstants.leftI);
+    leftPID.setD(RealConstants.leftD);
+    leftPID.setFF(RealConstants.leftF);
 
-    rightPID.setP(RealConstants.kP);
-    rightPID.setI(RealConstants.kI);
-    rightPID.setD(RealConstants.kD);
-    rightPID.setFF(RealConstants.kV);
+    rightPID.setP(RealConstants.rightP);
+    rightPID.setI(RealConstants.rightI);
+    rightPID.setD(RealConstants.rightD);
+    rightPID.setFF(RealConstants.rightF);
 
     // Burn settings to the flash of all the motors
     leftLeader.burnFlash();
@@ -118,5 +120,23 @@ public class DriveIOSparkMax implements DriveIO {
   public void setBrakeMode(boolean enable) {
     leftLeader.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     rightLeader.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+  }
+
+  @Override
+  public void setLeftPID(double leftP, double leftI, double leftD, double leftF) {
+    // Set the PID values on the left PID controller
+    leftPID.setP(leftP);
+    leftPID.setI(leftI);
+    leftPID.setD(leftD);
+    leftPID.setFF(leftF);
+  }
+
+  @Override
+  public void setRightPID(double rightP, double rightI, double rightD, double rightF) {
+    // Set the PID values on the right PID controller
+    rightPID.setP(rightP);
+    rightPID.setI(rightI);
+    rightPID.setD(rightD);
+    rightPID.setFF(rightF);
   }
 }
