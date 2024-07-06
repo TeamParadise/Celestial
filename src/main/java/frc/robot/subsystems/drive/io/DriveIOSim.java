@@ -23,7 +23,7 @@ public class DriveIOSim implements DriveIO {
   // Built-in WPILib drivetrain simulation
   private final DifferentialDrivetrainSim sim;
 
-  // Create booleans to be used to simulate certain modes of the robot
+  // Create closed loop boolean so that we know when to run closed loop
   private boolean closedLoop = false;
 
   // Store simulated drivetrain voltage values
@@ -32,12 +32,12 @@ public class DriveIOSim implements DriveIO {
 
   // Create PID controller for both sides (need to create some sort of sim pid values)
   private final PIDController leftPID =
-      new PIDController(SimConstants.kP, SimConstants.kI, SimConstants.kD);
+      new PIDController(SimConstants.leftP, SimConstants.leftI, SimConstants.leftD);
   private final PIDController rightPID =
-      new PIDController(SimConstants.kP, SimConstants.kI, SimConstants.kD);
+      new PIDController(SimConstants.leftP, SimConstants.leftI, SimConstants.leftD);
 
   // Create feedforward controller to calculate feedforward values
-  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SimConstants.kF, 0);
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, SimConstants.feedforward);
 
   // "Constructor" class, run when the class is first initialized
   public DriveIOSim(
@@ -81,15 +81,15 @@ public class DriveIOSim implements DriveIO {
 
     // Set inputs for left drive side
     inputs.leftPositionRotations = sim.getLeftPositionMeters() / DriveConstants.metersPerRotation;
-    inputs.leftVelocityRotationsPerSec =
-        sim.getLeftVelocityMetersPerSecond() / DriveConstants.metersPerRotation;
+    inputs.leftVelocityRPM =
+        sim.getLeftVelocityMetersPerSecond() * 60 / DriveConstants.metersPerRotation;
     inputs.leftAppliedVolts = leftAppliedVolts;
     inputs.leftCurrentAmps = new double[] {sim.getLeftCurrentDrawAmps()};
 
     // Set inputs for right drive side
     inputs.rightPositionRotations = sim.getRightPositionMeters() / DriveConstants.metersPerRotation;
-    inputs.rightVelocityRotationsPerSec =
-        sim.getRightVelocityMetersPerSecond() / DriveConstants.metersPerRotation;
+    inputs.rightVelocityRPM =
+        sim.getRightVelocityMetersPerSecond() * 60 / DriveConstants.metersPerRotation;
     inputs.rightAppliedVolts = rightAppliedVolts;
     inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
 
@@ -124,5 +124,25 @@ public class DriveIOSim implements DriveIO {
     // Set the setpoint of the PID loops
     leftPID.setSetpoint(leftMetersPerSec);
     rightPID.setSetpoint(rightMetersPerSec);
+  }
+
+  @Override
+  public void setLeftPIDF(double leftP, double leftI, double leftD, double leftF) {
+    // Set the PIDF values on the left PID controller
+    leftPID.setPID(leftP, leftI, leftD);
+
+    // Note, the feedforward values are shared in simulation! So both left and right have the same
+    // feedforward values.
+    feedforward = new SimpleMotorFeedforward(0, leftF);
+  }
+
+  @Override
+  public void setRightPIDF(double rightP, double rightI, double rightD, double rightF) {
+    // Set the PIDF values on the left PID controller
+    rightPID.setPID(rightP, rightI, rightD);
+
+    // Note, the feedforward values are shared in simulation! So both left and right have the same
+    // feedforward values.
+    feedforward = new SimpleMotorFeedforward(0, rightF);
   }
 }

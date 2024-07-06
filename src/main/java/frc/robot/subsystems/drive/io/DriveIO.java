@@ -12,18 +12,18 @@ import org.littletonrobotics.junction.AutoLog;
 
 /** Basic IO implementation for a Differential Drivetrain with four motors. */
 public interface DriveIO {
-  /** Class used to log the inputs from a Differential Drivetrain */
+  /** Class used to log the inputs from a Differential Drivetrain. */
   @AutoLog
   class DriveIOInputs {
     // Left drive inputs
     public double leftPositionRotations = 0.0;
-    public double leftVelocityRotationsPerSec = 0.0;
+    public double leftVelocityRPM = 0.0;
     public double leftAppliedVolts = 0.0;
     public double[] leftCurrentAmps = new double[] {};
 
     // Right drive inputs
     public double rightPositionRotations = 0.0;
-    public double rightVelocityRotationsPerSec = 0.0;
+    public double rightVelocityRPM = 0.0;
     public double rightAppliedVolts = 0.0;
     public double[] rightCurrentAmps = new double[] {};
 
@@ -62,8 +62,8 @@ public interface DriveIO {
   default void setBrakeMode(boolean enable) {}
 
   /** Change the PIDF values on the left side of the drivetrain. */
-  default void setLeftPID(double leftP, double leftI, double leftD, double leftF) {}
+  default void setLeftPIDF(double leftP, double leftI, double leftD, double leftF) {}
 
   /** Change the PIDF values on the right side of the drivetrain. */
-  default void setRightPID(double rightP, double rightI, double rightD, double rightF) {}
+  default void setRightPIDF(double rightP, double rightI, double rightD, double rightF) {}
 }

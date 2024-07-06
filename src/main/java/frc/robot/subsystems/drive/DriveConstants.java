@@ -13,7 +13,7 @@ public class DriveConstants {
   public static final double gearRatio = 8.45;
   public static final double wheelRadius = Units.inchesToMeters(3.0);
 
-  public static final double metersPerRotation = 2 * Math.PI * Units.inchesToMeters(wheelRadius);
+  public static final double metersPerRotation = 2 * Math.PI * wheelRadius;
 
   public static class RealConstants {
     public static final int leftLeaderID = 1;
@@ -35,10 +35,17 @@ public class DriveConstants {
   }
 
   public static class SimConstants {
-    // PIDF Values (need to be tuned)
-    public static final double kP = 1.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kF = 0.0;
+    // Left PID Values (need to be tuned)
+    public static final double leftP = 0.0;
+    public static final double leftI = 0.0;
+    public static final double leftD = 0.0;
+
+    // Right PID Values (need to be tuned)
+    public static final double rightP = 0.0;
+    public static final double rightI = 0.0;
+    public static final double rightD = 0.0;
+
+    // Shared feedforward value
+    public static final double feedforward = 0.0;
   }
 }

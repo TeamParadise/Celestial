@@ -77,14 +77,14 @@ public class DriveIOSparkMax implements DriveIO {
   public void updateInputs(DriveIOInputs inputs) {
     // Set inputs for left drive side
     inputs.leftPositionRotations = leftEncoder.getPosition() / DriveConstants.gearRatio;
-    inputs.leftVelocityRotationsPerSec = leftEncoder.getVelocity() / DriveConstants.gearRatio;
+    inputs.leftVelocityRPM = leftEncoder.getVelocity() / DriveConstants.gearRatio;
     inputs.leftAppliedVolts = leftLeader.getAppliedOutput() * leftLeader.getBusVoltage();
     inputs.leftCurrentAmps =
         new double[] {leftLeader.getOutputCurrent(), leftFollower.getOutputCurrent()};
 
     // Set inputs for right drive side
     inputs.rightPositionRotations = rightEncoder.getPosition() / DriveConstants.gearRatio;
-    inputs.rightVelocityRotationsPerSec = rightEncoder.getVelocity() / DriveConstants.gearRatio;
+    inputs.rightVelocityRPM = rightEncoder.getVelocity() / DriveConstants.gearRatio;
     inputs.rightAppliedVolts = rightLeader.getAppliedOutput() * rightLeader.getBusVoltage();
     inputs.rightCurrentAmps =
         new double[] {rightLeader.getOutputCurrent(), rightFollower.getOutputCurrent()};
@@ -123,8 +123,8 @@ public class DriveIOSparkMax implements DriveIO {
   }
 
   @Override
-  public void setLeftPID(double leftP, double leftI, double leftD, double leftF) {
-    // Set the PID values on the left PID controller
+  public void setLeftPIDF(double leftP, double leftI, double leftD, double leftF) {
+    // Set the PIDF values on the left PID controller
     leftPID.setP(leftP);
     leftPID.setI(leftI);
     leftPID.setD(leftD);
@@ -132,8 +132,8 @@ public class DriveIOSparkMax implements DriveIO {
   }
 
   @Override
-  public void setRightPID(double rightP, double rightI, double rightD, double rightF) {
-    // Set the PID values on the right PID controller
+  public void setRightPIDF(double rightP, double rightI, double rightD, double rightF) {
+    // Set the PIDF values on the right PID controller
     rightPID.setP(rightP);
     rightPID.setI(rightI);
     rightPID.setD(rightD);

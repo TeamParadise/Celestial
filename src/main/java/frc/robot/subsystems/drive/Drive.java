@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
@@ -39,7 +40,7 @@ public class Drive extends SubsystemBase {
 
   // GyroIO objects
   private GyroIO gyroIO;
-  private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+  private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
 
   // Create odometry and kinematics objects
   private final DifferentialDriveOdometry odometry =
@@ -129,14 +130,21 @@ public class Drive extends SubsystemBase {
     // Update PIDF values if changed in tuning mode
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setLeftPID(leftP.get(), leftI.get(), leftD.get(), leftF.get()),
+        () -> io.setLeftPIDF(leftP.get(), leftI.get(), leftD.get(), leftF.get()),
         leftP,
         leftI,
         leftD,
         leftF);
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> io.setRightPIDF(rightP.get(), rightI.get(), rightD.get(), rightF.get()),
+        rightP,
+        rightI,
+        rightD,
+        rightF);
 
-    // Use AdvantageKit modes for this eventually
-    if (Robot.isReal()) {
+    // Check to make sure if the robot is real
+    if (Robot.isRealAK()) {
       // Update and log inputs from the gyro and update odometry
       gyroIO.updateInputs(gyroInputs);
       Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -147,15 +155,28 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  /** Tell the drivetrain to move in an open-loop manner at a certain number of volts. */
+  // Basic drive functions to be used in commands
+  /**
+   * Tell the drivetrain to move in an open-loop manner at a certain number of volts.
+   * <p><font color="red">
+   * Shouldn't be used directly without going through a Command.
+   * </font>
+   */
   public void driveVolts(double leftVolts, double rightVolts) {
+    // Log that we are no longer running in closed loop mode
     Logger.recordOutput("Drive/ClosedLoop/Active", false);
 
     io.setVoltage(leftVolts, rightVolts);
   }
 
-  /** Tell the drivetrain to move in an open-loop manner with arcade-style controls. */
+  /**
+   * Tell the drivetrain to move in an open-loop manner with arcade-style controls.
+   * <p><font color="red">
+   * Shouldn't be used directly without going through a Command.
+   * </font>
+   */
   public void driveArcade(double xSpeed, double zRotation) {
+    // Log that we are no longer running in closed loop mode
     Logger.recordOutput("Drive/ClosedLoop/Active", false);
 
     // Use kinematics to figure out the speeds of the left and right side of the chassis
@@ -163,13 +184,29 @@ public class Drive extends SubsystemBase {
     io.setSpeed(speeds.left, speeds.right);
   }
 
-  /** Tell the drivetrain to move in a closed-loop manner with velocity control. */
+  /**
+   * Tell the drivetrain to move in a closed-loop manner with velocity control.
+   * <p><font color="red">
+   * Shouldn't be used directly without going through a Command.
+   * </font>
+   */
   public void driveVelocity(double leftMetersPerSec, double rightMetersPerSec) {
+    // Log that we are running in closed-loop mode and log setpoints
     Logger.recordOutput("Drive/ClosedLoop/Active", true);
     Logger.recordOutput("Drive/LeftVelocitySetpointMetersPerSec", leftMetersPerSec);
     Logger.recordOutput("Drive/RightVelocitySetpointMetersPerSec", rightMetersPerSec);
 
     io.setVelocity(leftMetersPerSec, rightMetersPerSec);
+  }
+
+  /** Returns a command to run a quasistatic test in the specified direction. */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysId.quasistatic(direction);
+  }
+
+  /** Returns a command to run a dynamic test in the specified direction. */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysId.dynamic(direction);
   }
 
   /** Returns the current odometry pose in meters. */
@@ -180,7 +217,8 @@ public class Drive extends SubsystemBase {
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
-    if (Robot.isReal()) {
+    // If the robot is real, use gyro inputs, otherwise, use simulated
+    if (Robot.isRealAK()) {
       odometry.resetPosition(
           gyroInputs.yaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
     } else {
@@ -204,12 +242,12 @@ public class Drive extends SubsystemBase {
   /** Returns the velocity of the left wheels in meters/second. */
   @AutoLogOutput
   public double getLeftVelocityMetersPerSec() {
-    return inputs.leftVelocityRotationsPerSec * DriveConstants.metersPerRotation;
+    return inputs.leftVelocityRPM * DriveConstants.metersPerRotation;
   }
 
   /** Returns the velocity of the right wheels in meters/second. */
   @AutoLogOutput
   public double getRightVelocityMetersPerSec() {
-    return inputs.rightVelocityRotationsPerSec * DriveConstants.metersPerRotation;
+    return inputs.rightVelocityRPM * DriveConstants.metersPerRotation;
   }
 }
