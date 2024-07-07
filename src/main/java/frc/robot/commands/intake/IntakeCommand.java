@@ -6,32 +6,27 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.flywheels.Flywheels;
 import frc.robot.subsystems.flywheels.FlywheelsConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 
+/** Command for automatic intake, ending when the note has been grabbed */
 public class IntakeCommand extends Command {
 
   private final Flywheels flywheels;
   private final Intake intake;
 
-  public IntakeCommand() {
-    this.flywheels = RobotContainer.flywheels;
-    this.intake = RobotContainer.intake;
+  public IntakeCommand(Flywheels flywheels, Intake intake) {
+    this.flywheels = flywheels;
+    this.intake = intake;
 
     addRequirements(this.flywheels, this.intake);
   }
 
-  /** The initial subroutine of a command. Called once when the command is initially scheduled. */
   @Override
   public void initialize() {}
 
-  /**
-   * The main body of a command. Called repeatedly while the command is scheduled. (That is, it is
-   * called repeatedly until {@link #isFinished()}) returns true.)
-   */
   @Override
   public void execute() {
     flywheels.setVelocity(FlywheelsConstants.Presets.intake);
@@ -52,7 +47,8 @@ public class IntakeCommand extends Command {
    */
   @Override
   public boolean isFinished() {
-    return false;
+    // Add code here to check if the note has been grabbed using the current of motors, needs to be
+    // tested before it can be finalized.
   }
 
   /**
@@ -64,5 +60,8 @@ public class IntakeCommand extends Command {
    * @param interrupted whether the command was interrupted/canceled
    */
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    flywheels.setVelocity(0);
+    intake.setVelocity(0);
+  }
 }

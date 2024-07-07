@@ -5,21 +5,31 @@
 
 package frc.robot.subsystems.intake;
 
+/** Constants used for the intake of the robot. */
 public class IntakeConstants {
-  public static class FollowerConstants {
-    public static int motorID = 6;
+  /** Constants for the motor that controls the bottom part of the intake. */
+  public static class BottomConstants {
+    public static int motorID = 5;
+
+    // Bottom Intake Motor PIDF Values (need to be tuned)
+    public static final double bottomP = 0.0;
+    public static final double bottomI = 0.0;
+    public static final double bottomD = 0.0;
+    public static final double bottomF = 0.0;
   }
 
-  public static int motorID = 5;
+  /** Constants for the motor that controls the top part of the intake. */
+  public static class TopConstants {
+    public static int motorID = 6;
 
-  // PIDF Values (need to be tuned)
-  public static final double kP = 0.0;
-  public static final double kI = 0.0;
-  public static final double kD = 0.0;
-  public static final double kS = 0.0;
-  public static final double kV = 0.0;
+    // Top Intake Motor PIDF Values (need to be tuned)
+    public static final double topP = 0.0;
+    public static final double topI = 0.0;
+    public static final double topD = 0.0;
+    public static final double topF = 0.0;
+  }
 
-  // Preset speeds for feeder
+  /** Preset speeds for the intake. */
   public static class Presets {
     // Need to be tuned
     public static final double intake = 1000;

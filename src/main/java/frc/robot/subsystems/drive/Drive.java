@@ -155,7 +155,7 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  // Basic drive functions to be used in commands
+  // Basic drive methods to be used in commands
   /**
    * Tell the drivetrain to move in an open-loop manner at a certain number of volts.
    *

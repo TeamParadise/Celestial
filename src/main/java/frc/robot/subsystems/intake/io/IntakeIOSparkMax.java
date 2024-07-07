@@ -11,67 +11,81 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakeConstants.*;
 
 /** Intake IO implementation for a SPARK MAX (NEO) based intake. */
 public class IntakeIOSparkMax implements IntakeIO {
-  // Create basic motor objects (leader is the top motor, follower is the bottom)
-  private final CANSparkMax intakeLeader =
-      new CANSparkMax(IntakeConstants.motorID, MotorType.kBrushless);
-  private final CANSparkMax intakeFollower =
-      new CANSparkMax(IntakeConstants.FollowerConstants.motorID, MotorType.kBrushless);
+  // Create basic motor objects
+  private final CANSparkMax bottomIntake =
+      new CANSparkMax(BottomConstants.motorID, MotorType.kBrushless);
+  private final CANSparkMax topIntake =
+      new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
 
-  // Get encoder for the motor
-  private final RelativeEncoder intakeEncoder = intakeLeader.getEncoder();
+  // Get encoders for the motors
+  private final RelativeEncoder bottomEncoder = bottomIntake.getEncoder();
+  private final RelativeEncoder topEncoder = topIntake.getEncoder();
 
-  // Create our PID controller
-  private final SparkPIDController intakePID = intakeLeader.getPIDController();
+  // Create our PID controllers
+  private final SparkPIDController bottomPID = bottomIntake.getPIDController();
+  private final SparkPIDController topPID = topIntake.getPIDController();
 
-  // "Constructor" class, run when the class if first initialized
+  /** Intake IO implementation for a SPARK MAX (NEO) based intake. */
   public IntakeIOSparkMax() {
     // Reset all motor controllers to factory defaults, ensures only settings here are modified
-    intakeLeader.restoreFactoryDefaults();
-    intakeFollower.restoreFactoryDefaults();
+    bottomIntake.restoreFactoryDefaults();
+    topIntake.restoreFactoryDefaults();
 
     // Set current limits to protect motors
-    intakeLeader.setSmartCurrentLimit(60);
-    intakeFollower.setSmartCurrentLimit(60);
+    bottomIntake.setSmartCurrentLimit(60);
+    topIntake.setSmartCurrentLimit(60);
 
     // Set idle mode to coast
-    intakeLeader.setIdleMode(IdleMode.kCoast);
-    intakeFollower.setIdleMode(IdleMode.kCoast);
+    bottomIntake.setIdleMode(IdleMode.kCoast);
+    topIntake.setIdleMode(IdleMode.kCoast);
 
-    // Set our PIDF values for the intake PID controller
-    intakePID.setP(IntakeConstants.kP);
-    intakePID.setI(IntakeConstants.kI);
-    intakePID.setD(IntakeConstants.kD);
-    intakePID.setFF(IntakeConstants.kV);
+    // Set our PIDF values for the bottom and top PID controllers
+    bottomPID.setP(BottomConstants.bottomP);
+    bottomPID.setI(BottomConstants.bottomI);
+    bottomPID.setD(BottomConstants.bottomD);
+    bottomPID.setFF(BottomConstants.bottomF);
+
+    topPID.setP(TopConstants.topP);
+    topPID.setI(TopConstants.topI);
+    topPID.setD(TopConstants.topD);
+    topPID.setFF(TopConstants.topF);
 
     // Burn settings to the flash of the motors
-    intakeLeader.burnFlash();
-    intakeFollower.burnFlash();
+    topIntake.burnFlash();
+    bottomIntake.burnFlash();
   }
 
   @Override
   public void updateInputs(IntakeIOInputs inputs) {
-    // Set inputs for intake
-    inputs.intakePositionRotations = intakeEncoder.getPosition();
-    inputs.intakeVelocityRPM = intakeEncoder.getVelocity();
-    inputs.intakeAppliedVolts = intakeLeader.getAppliedOutput() * intakeLeader.getBusVoltage();
-    inputs.intakeCurrentAmps =
-        new double[] {intakeLeader.getOutputCurrent(), intakeFollower.getOutputCurrent()};
+    // Set inputs for bottom intake motor
+    inputs.bottomPositionRotations = bottomEncoder.getPosition();
+    inputs.bottomVelocityRPM = bottomEncoder.getVelocity();
+    inputs.bottomAppliedVolts = bottomIntake.getAppliedOutput() * bottomIntake.getBusVoltage();
+    inputs.bottomCurrentAmps = bottomIntake.getOutputCurrent();
+
+    // Set inputs for top intake motor
+    inputs.topPositionRotations = topEncoder.getPosition();
+    inputs.topVelocityRPM = topEncoder.getVelocity();
+    inputs.topAppliedVolts = topIntake.getAppliedOutput() * topIntake.getBusVoltage();
+    inputs.topCurrentAmps = topIntake.getOutputCurrent();
   }
 
   @Override
   public void setVoltage(double intakeVolts) {
-    // Set voltage of intake
-    intakeLeader.setVoltage(intakeVolts);
+    // Set voltage of both motors
+    bottomIntake.setVoltage(intakeVolts);
+    topIntake.setVoltage(intakeVolts);
   }
 
   @Override
   public void setSpeed(double intakeSpeed) {
     // Set speed of both motors
-    intakeLeader.set(intakeSpeed);
+    bottomIntake.set(intakeSpeed);
+    topIntake.set(intakeSpeed);
   }
 
   @Override
@@ -80,6 +94,25 @@ public class IntakeIOSparkMax implements IntakeIO {
     // might want to try it though
 
     // Set the reference values of each PID controller
-    intakePID.setReference(intakeRPM, ControlType.kVelocity);
+    bottomPID.setReference(intakeRPM, ControlType.kVelocity);
+    topPID.setReference(intakeRPM, ControlType.kVelocity);
+  }
+
+  @Override
+  public void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF) {
+    // Set the PIDF values on the bottom PID controller
+    bottomPID.setP(bottomP);
+    bottomPID.setI(bottomI);
+    bottomPID.setD(bottomD);
+    bottomPID.setFF(bottomF);
+  }
+
+  @Override
+  public void setTopPIDF(double topP, double topI, double topD, double topF) {
+    // Set the PIDF values on the top PID controller
+    topPID.setP(topP);
+    topPID.setI(topI);
+    topPID.setD(topD);
+    topPID.setFF(topF);
   }
 }

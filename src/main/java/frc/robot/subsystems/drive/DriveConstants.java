@@ -7,6 +7,7 @@ package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.util.Units;
 
+/** Constants used for the drivetrain of the robot. */
 public class DriveConstants {
   // These will need to be changed
   public static final double trackWidth = Units.inchesToMeters(26.0);
@@ -15,6 +16,7 @@ public class DriveConstants {
 
   public static final double metersPerRotation = 2 * Math.PI * wheelRadius;
 
+  /** Constants used on the real robot. */
   public static class RealConstants {
     public static final int leftLeaderID = 1;
     public static final int leftFollowerID = 2;
@@ -34,6 +36,7 @@ public class DriveConstants {
     public static final double rightF = 0.0;
   }
 
+  /** Constants used in the simulation. */
   public static class SimConstants {
     // Left PID Values (need to be tuned)
     public static final double leftP = 0.0;

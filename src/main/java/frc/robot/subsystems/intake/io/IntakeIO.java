@@ -7,16 +7,22 @@ package frc.robot.subsystems.intake.io;
 
 import org.littletonrobotics.junction.AutoLog;
 
-/** Basic IO implementation for an Intake (with a feeder). */
+/** Basic IO implementation for a dual-motor Intake. */
 public interface IntakeIO {
   /** Class to log the inputs from an Intake. */
   @AutoLog
   class IntakeIOInputs {
-    // Top wheel inputs
-    public double intakePositionRotations = 0.0;
-    public double intakeVelocityRPM = 0.0;
-    public double intakeAppliedVolts = 0.0;
-    public double[] intakeCurrentAmps = new double[] {};
+    // Bottom motor inputs
+    public double bottomPositionRotations = 0.0;
+    public double bottomVelocityRPM = 0.0;
+    public double bottomAppliedVolts = 0.0;
+    public double bottomCurrentAmps = 0.0;
+
+    // Top motor inputs
+    public double topPositionRotations = 0.0;
+    public double topVelocityRPM = 0.0;
+    public double topAppliedVolts = 0.0;
+    public double topCurrentAmps = 0.0;
   }
 
   /** Updates the inputs inside an IntakeIOInputs to the latest values. */
@@ -42,4 +48,10 @@ public interface IntakeIO {
    * @param intakeRPM The intake velocity to set. Value is in rotations per minute.
    */
   default void setVelocity(double intakeRPM) {}
+
+  /** Change the PIDF values on the bottom motor of the intake. */
+  default void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF) {}
+
+  /** Change the PIDF values on the top motor of the intake. */
+  default void setTopPIDF(double topP, double topI, double topD, double topF) {}
 }
