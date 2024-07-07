@@ -16,6 +16,14 @@ public class Constants {
   public static final boolean tuningMode = false;
   public static final double loopPeriodSecs = 0.02;
 
+  /** Constants to be used for the Xbox controllers for the robot */
+  public static class XboxConstants {
+    public static final double driverControllerID = 0;
+    public static final double operatorControllerID = 1;
+
+    public static final double joystickDeadband = 0.1;
+  }
+
   public enum Mode {
     /** Running on a real robot. */
     Real,

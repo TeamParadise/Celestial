@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSiz
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.drive.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.io.DriveIOSim;
 import frc.robot.subsystems.flywheels.Flywheels;
@@ -38,8 +39,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     drive.setDefaultCommand(
-        Commands.run(
-            () -> drive.driveArcade(-controller.getLeftY(), controller.getRightX()), drive));
+        DriveCommands.driveArcade(drive, () -> -controller.getLeftY(), controller::getRightX));
   }
 
   public Command getAutonomousCommand() {

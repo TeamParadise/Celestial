@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.Mode;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
-import frc.robot.Constants.Mode;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -85,25 +85,28 @@ public class Robot extends LoggedRobot {
   public void testExit() {}
 
   // The following functions are to check the robot mode using the robotMode in Constants
-  /** Get if the robot is real, according to the Constants.robotMode.
-   * <p>
-   * Returns: If the code is for a real robot.
+  /**
+   * Get if the robot is real, according to the Constants.robotMode.
+   *
+   * <p>Returns: If the code is for a real robot.
    */
   public static boolean isRealAK() {
     return Constants.robotMode == Mode.Real;
   }
 
-  /** Get if the robot is a simulation, according to the Constants.robotMode.
-   * <p>
-   * Returns: If the code is for a simulation.
+  /**
+   * Get if the robot is a simulation, according to the Constants.robotMode.
+   *
+   * <p>Returns: If the code is for a simulation.
    */
   public static boolean isSimulationAK() {
     return Constants.robotMode == Mode.Sim;
   }
 
-  /** Get if the robot is a replay, according to the Constants.robotMode.
-   * <p>
-   * Returns: If the code is for a replay.
+  /**
+   * Get if the robot is a replay, according to the Constants.robotMode.
+   *
+   * <p>Returns: If the code is for a replay.
    */
   public static boolean isReplayAK() {
     return Constants.robotMode == Mode.Replay;

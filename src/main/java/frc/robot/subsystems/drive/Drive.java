@@ -158,9 +158,8 @@ public class Drive extends SubsystemBase {
   // Basic drive functions to be used in commands
   /**
    * Tell the drivetrain to move in an open-loop manner at a certain number of volts.
-   * <p><font color="red">
-   * Shouldn't be used directly without going through a Command.
-   * </font>
+   *
+   * <p><font color="red"> Shouldn't be used directly without going through a Command. </font>
    */
   public void driveVolts(double leftVolts, double rightVolts) {
     // Log that we are no longer running in closed loop mode
@@ -171,9 +170,8 @@ public class Drive extends SubsystemBase {
 
   /**
    * Tell the drivetrain to move in an open-loop manner with arcade-style controls.
-   * <p><font color="red">
-   * Shouldn't be used directly without going through a Command.
-   * </font>
+   *
+   * <p><font color="red"> Shouldn't be used directly without going through a Command. </font>
    */
   public void driveArcade(double xSpeed, double zRotation) {
     // Log that we are no longer running in closed loop mode
@@ -186,9 +184,8 @@ public class Drive extends SubsystemBase {
 
   /**
    * Tell the drivetrain to move in a closed-loop manner with velocity control.
-   * <p><font color="red">
-   * Shouldn't be used directly without going through a Command.
-   * </font>
+   *
+   * <p><font color="red"> Shouldn't be used directly without going through a Command. </font>
    */
   public void driveVelocity(double leftMetersPerSec, double rightMetersPerSec) {
     // Log that we are running in closed-loop mode and log setpoints
@@ -239,15 +236,15 @@ public class Drive extends SubsystemBase {
     return inputs.rightPositionRotations * DriveConstants.metersPerRotation;
   }
 
-  /** Returns the velocity of the left wheels in meters/second. */
+  /** Returns the velocity of the left wheels in meters per second. */
   @AutoLogOutput
   public double getLeftVelocityMetersPerSec() {
-    return inputs.leftVelocityRPM * DriveConstants.metersPerRotation;
+    return inputs.leftVelocityRPM * DriveConstants.metersPerRotation / 60;
   }
 
-  /** Returns the velocity of the right wheels in meters/second. */
+  /** Returns the velocity of the right wheels in meters per second. */
   @AutoLogOutput
   public double getRightVelocityMetersPerSec() {
-    return inputs.rightVelocityRPM * DriveConstants.metersPerRotation;
+    return inputs.rightVelocityRPM * DriveConstants.metersPerRotation / 60;
   }
 }

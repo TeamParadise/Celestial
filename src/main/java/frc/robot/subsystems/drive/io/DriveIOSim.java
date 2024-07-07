@@ -37,7 +37,8 @@ public class DriveIOSim implements DriveIO {
       new PIDController(SimConstants.leftP, SimConstants.leftI, SimConstants.leftD);
 
   // Create feedforward controller to calculate feedforward values
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, SimConstants.feedforward);
+  private SimpleMotorFeedforward feedforward =
+      new SimpleMotorFeedforward(0, SimConstants.feedforward);
 
   // "Constructor" class, run when the class is first initialized
   public DriveIOSim(
