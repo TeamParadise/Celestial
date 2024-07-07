@@ -11,78 +11,81 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import frc.robot.subsystems.flywheels.FlywheelsConstants;
 import frc.robot.subsystems.flywheels.FlywheelsConstants.*;
 
-/** Flywheels IO implementation for a SPARK MAX (NEO) based intake. */
+/** Flywheels IO implementation for a SPARK MAX (NEO) based set of flywheels. */
 public class FlywheelsIOSparkMax implements FlywheelsIO {
   // Create basic motor objects
-  private final CANSparkMax topFlywheel =
-      new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
   private final CANSparkMax bottomFlywheel =
       new CANSparkMax(BottomConstants.motorID, MotorType.kBrushless);
+  private final CANSparkMax topFlywheel =
+      new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
 
   // Get encoder for the motor
-  private final RelativeEncoder topEncoder = topFlywheel.getEncoder();
   private final RelativeEncoder bottomEncoder = bottomFlywheel.getEncoder();
+  private final RelativeEncoder topEncoder = topFlywheel.getEncoder();
 
   // Create our PID controllers
-  private final SparkPIDController flywheelPID = topFlywheel.getPIDController();
+  private final SparkPIDController bottomPID = bottomFlywheel.getPIDController();
+  private final SparkPIDController topPID = topFlywheel.getPIDController();
 
-  // "Constructor" class, run when the class if first initialized
+  /** Flywheels IO implementation for a SPARK MAX (NEO) based set of flywheels. */
   public FlywheelsIOSparkMax() {
     // Reset all motor controllers to factory defaults, ensures only settings here are modified
-    topFlywheel.restoreFactoryDefaults();
     bottomFlywheel.restoreFactoryDefaults();
+    topFlywheel.restoreFactoryDefaults();
 
     // Set current limits to protect motors
-    topFlywheel.setSmartCurrentLimit(60);
     bottomFlywheel.setSmartCurrentLimit(60);
+    topFlywheel.setSmartCurrentLimit(60);
 
     // Set idle mode to coast
-    topFlywheel.setIdleMode(IdleMode.kCoast);
     bottomFlywheel.setIdleMode(IdleMode.kCoast);
+    topFlywheel.setIdleMode(IdleMode.kCoast);
 
-    // Set the bottom flywheel to be a follower motor
-    // This might have to be changed later if the PID values for each motor need to be seperate
-    bottomFlywheel.follow(topFlywheel, true);
+    // Set our PIDF values for the bottom and top PID controllers
+    bottomPID.setP(BottomConstants.bottomP);
+    bottomPID.setI(BottomConstants.bottomI);
+    bottomPID.setD(BottomConstants.bottomD);
+    bottomPID.setFF(BottomConstants.bottomF);
 
-    // Set our PIDF values for the intake PID controller
-    flywheelPID.setP(FlywheelsConstants.kP);
-    flywheelPID.setI(FlywheelsConstants.kI);
-    flywheelPID.setD(FlywheelsConstants.kD);
-    flywheelPID.setFF(FlywheelsConstants.kV);
+    topPID.setP(TopConstants.topP);
+    topPID.setI(TopConstants.topI);
+    topPID.setD(TopConstants.topD);
+    topPID.setFF(TopConstants.topF);
 
     // Burn settings to the flash of the motors
-    topFlywheel.burnFlash();
     bottomFlywheel.burnFlash();
+    topFlywheel.burnFlash();
   }
 
   @Override
   public void updateInputs(FlywheelsIOInputs inputs) {
-    // Set inputs for the top flywheel motor
-    inputs.topPositionRotations = topEncoder.getPosition();
-    inputs.topVelocityRPM = topEncoder.getVelocity();
-    inputs.topAppliedVolts = topFlywheel.getAppliedOutput() * topFlywheel.getBusVoltage();
-    inputs.topCurrentAmps = topFlywheel.getOutputCurrent();
-
-    // Set inputs for the bottom flywheel motor
+    // Set inputs for bottom intake motor
     inputs.bottomPositionRotations = bottomEncoder.getPosition();
     inputs.bottomVelocityRPM = bottomEncoder.getVelocity();
     inputs.bottomAppliedVolts = bottomFlywheel.getAppliedOutput() * bottomFlywheel.getBusVoltage();
     inputs.bottomCurrentAmps = bottomFlywheel.getOutputCurrent();
+
+    // Set inputs for top intake motor
+    inputs.topPositionRotations = topEncoder.getPosition();
+    inputs.topVelocityRPM = topEncoder.getVelocity();
+    inputs.topAppliedVolts = topFlywheel.getAppliedOutput() * topFlywheel.getBusVoltage();
+    inputs.topCurrentAmps = topFlywheel.getOutputCurrent();
   }
 
   @Override
   public void setVoltage(double flywheelVolts) {
-    // Set voltage of intake
+    // Set voltage of both motors
+    bottomFlywheel.setVoltage(flywheelVolts);
     topFlywheel.setVoltage(flywheelVolts);
   }
 
   @Override
   public void setSpeed(double flywheelSpeed) {
     // Set speed of both motors
-    topFlywheel.set(flywheelSpeed);
+    bottomFlywheel.set(flywheelSpeed);
+    bottomFlywheel.set(flywheelSpeed);
   }
 
   @Override
@@ -91,6 +94,25 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
     // might want to try it though
 
     // Set the reference values of each PID controller
-    flywheelPID.setReference(flywheelRPM, ControlType.kVelocity);
+    bottomPID.setReference(flywheelRPM, ControlType.kVelocity);
+    topPID.setReference(flywheelRPM, ControlType.kVelocity);
+  }
+
+  @Override
+  public void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF) {
+    // Set the PIDF values on the bottom PID controller
+    bottomPID.setP(bottomP);
+    bottomPID.setI(bottomI);
+    bottomPID.setD(bottomD);
+    bottomPID.setFF(bottomF);
+  }
+
+  @Override
+  public void setTopPIDF(double topP, double topI, double topD, double topF) {
+    // Set the PIDF values on the top PID controller
+    topPID.setP(topP);
+    topPID.setI(topI);
+    topPID.setD(topD);
+    topPID.setFF(topF);
   }
 }

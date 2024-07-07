@@ -49,6 +49,7 @@ public class IntakeCommand extends Command {
   public boolean isFinished() {
     // Add code here to check if the note has been grabbed using the current of motors, needs to be
     // tested before it can be finalized.
+    return false;
   }
 
   /**

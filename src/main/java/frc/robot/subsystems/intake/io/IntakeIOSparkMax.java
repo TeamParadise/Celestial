@@ -18,8 +18,7 @@ public class IntakeIOSparkMax implements IntakeIO {
   // Create basic motor objects
   private final CANSparkMax bottomIntake =
       new CANSparkMax(BottomConstants.motorID, MotorType.kBrushless);
-  private final CANSparkMax topIntake =
-      new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
+  private final CANSparkMax topIntake = new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
 
   // Get encoders for the motors
   private final RelativeEncoder bottomEncoder = bottomIntake.getEncoder();

@@ -21,23 +21,23 @@ public class Intake extends SubsystemBase {
 
   // Set PID values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber bottomP =
-      new LoggedTunableNumber("Intake/Tuning/Bottom/P", BottomConstants.bottomP);
+      new LoggedTunableNumber("Intake/Bottom/P", BottomConstants.bottomP);
   private static final LoggedTunableNumber bottomI =
-      new LoggedTunableNumber("Intake/Tuning/Bottom/I", BottomConstants.bottomI);
+      new LoggedTunableNumber("Intake/Bottom/I", BottomConstants.bottomI);
   private static final LoggedTunableNumber bottomD =
-      new LoggedTunableNumber("Intake/Tuning/Bottom/D", BottomConstants.bottomD);
+      new LoggedTunableNumber("Intake/Bottom/D", BottomConstants.bottomD);
   private static final LoggedTunableNumber bottomF =
-      new LoggedTunableNumber("Intake/Tuning/Bottom/F", BottomConstants.bottomF);
+      new LoggedTunableNumber("Intake/Bottom/F", BottomConstants.bottomF);
 
   // Set PID values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber topP =
-      new LoggedTunableNumber("Intake/Tuning/Top/P", TopConstants.topP);
+      new LoggedTunableNumber("Intake/Top/P", TopConstants.topP);
   private static final LoggedTunableNumber topI =
-      new LoggedTunableNumber("Intake/Tuning/Top/I", TopConstants.topI);
+      new LoggedTunableNumber("Intake/Top/I", TopConstants.topI);
   private static final LoggedTunableNumber topD =
-      new LoggedTunableNumber("Intake/Tuning/Top/D", TopConstants.topD);
+      new LoggedTunableNumber("Intake/Top/D", TopConstants.topD);
   private static final LoggedTunableNumber topF =
-      new LoggedTunableNumber("Intake/Tuning/Top/F", TopConstants.topF);
+      new LoggedTunableNumber("Intake/Top/F", TopConstants.topF);
 
   /** Class for controlling a basic dual-motor Intake. */
   public Intake(IntakeIO io) {
@@ -74,7 +74,7 @@ public class Intake extends SubsystemBase {
    * <p><font color="red"> Shouldn't be used directly without going through a Command. </font>
    */
   public void setVolts(double intakeVolts) {
-    // Log that we are no longer running in open loop mode
+    // Log that we are no longer running in open-loop mode
     Logger.recordOutput("Intake/ClosedLoop/Active", false);
 
     io.setVoltage(intakeVolts);
@@ -86,13 +86,14 @@ public class Intake extends SubsystemBase {
    * <p><font color="red"> Shouldn't be used directly without going through a Command. </font>
    */
   public void setSpeed(double intakeSpeed) {
-    // Log that we are no longer running in open loop mode
+    // Log that we are no longer running in open-loop mode
     Logger.recordOutput("Intake/ClosedLoop/Active", false);
 
     io.setSpeed(intakeSpeed);
   }
 
-  /** Tell the intake to run in a closed-loop manner with velocity control.
+  /**
+   * Tell the intake to run in a closed-loop manner with velocity control.
    *
    * <p><font color="red"> Shouldn't be used directly without going through a Command. </font>
    */

@@ -5,23 +5,35 @@
 
 package frc.robot.subsystems.flywheels;
 
+/** Constants used for the flywheels of the robot. */
 public class FlywheelsConstants {
-  public static class TopConstants {
-    public static int motorID = 7;
-  }
-
+  /** Constants for the motor that controls the bottom set of flywheels. */
   public static class BottomConstants {
-    public static int motorID = 8;
+    public static int motorID = 7;
+
+    // Bottom Flywheel Motor PIDF Values (need to be tuned)
+    public static final double bottomP = 0.0;
+    public static final double bottomI = 0.0;
+    public static final double bottomD = 0.0;
+    public static final double bottomF = 0.0;
   }
 
-  // PIDF Values (need to be tuned)
-  public static final double kP = 0.0;
-  public static final double kI = 0.0;
-  public static final double kD = 0.0;
-  public static final double kS = 0.0;
-  public static final double kV = 0.0;
+  /** Constants for the motor that controls the top set of flywheels. */
+  public static class TopConstants {
+    public static int motorID = 8;
 
+    // Top Flywheel Motor PIDF Values (need to be tuned)
+    public static final double topP = 0.0;
+    public static final double topI = 0.0;
+    public static final double topD = 0.0;
+    public static final double topF = 0.0;
+  }
+
+  /** Preset speeds for the flywheels. */
   public static class Presets {
+    // Need to be tuned
     public static final double intake = -1000;
+    public static final double retract = -500;
+    public static final double shoot = 3000;
   }
 }

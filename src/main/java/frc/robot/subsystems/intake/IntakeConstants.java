@@ -33,6 +33,7 @@ public class IntakeConstants {
   public static class Presets {
     // Need to be tuned
     public static final double intake = 1000;
+    public static final double retract = -500;
     public static final double feed = 1000;
   }
 }

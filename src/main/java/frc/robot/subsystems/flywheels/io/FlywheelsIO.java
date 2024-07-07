@@ -12,17 +12,17 @@ public interface FlywheelsIO {
   /** Class to log the inputs from a set of Flywheels. */
   @AutoLog
   class FlywheelsIOInputs {
-    // Top flywheel roller inputs
-    public double topPositionRotations = 0.0;
-    public double topVelocityRPM = 0.0;
-    public double topAppliedVolts = 0.0;
-    public double topCurrentAmps = 0.0;
-
     // Bottom flywheel roller inputs
     public double bottomPositionRotations = 0.0;
     public double bottomVelocityRPM = 0.0;
     public double bottomAppliedVolts = 0.0;
     public double bottomCurrentAmps = 0.0;
+
+    // Top flywheel roller inputs
+    public double topPositionRotations = 0.0;
+    public double topVelocityRPM = 0.0;
+    public double topAppliedVolts = 0.0;
+    public double topCurrentAmps = 0.0;
   }
 
   /** Updates the inputs inside an FlywheelsIOInputs to the latest values. */
@@ -48,4 +48,10 @@ public interface FlywheelsIO {
    * @param flywheelRPM The flywheel velocity to set. Value is in rotations per minute.
    */
   default void setVelocity(double flywheelRPM) {}
+
+  /** Change the PIDF values on the bottom set of flywheels. */
+  default void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF) {}
+
+  /** Change the PIDF values on the top set of flywheels. */
+  default void setTopPIDF(double topP, double topI, double topD, double topF) {}
 }

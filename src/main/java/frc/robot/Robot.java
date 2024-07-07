@@ -5,35 +5,79 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Mode;
+import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+/** Main robot class. */
+@SuppressWarnings("DataFlowIssue")
 public class Robot extends LoggedRobot {
-  private Command m_autonomousCommand;
+  // Create autonomous command variable to store selected autonomous
+  private Command autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-
-  private Field2d field2d = new Field2d();
+  // Create RobotContainer object to create subsystems and controller bindings
+  private RobotContainer robotContainer;
 
   @Override
   public void robotInit() {
-    Logger.addDataReceiver(new NT4Publisher());
-    Logger.start();
-    m_robotContainer = new RobotContainer();
+    // Record build metadata
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata("RobotMode", BuildConstants.MAVEN_GROUP);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncommitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
 
-    SmartDashboard.putData("Field", field2d);
+    // Set up data receivers, and if replaying, replay source
+    switch (Constants.robotMode) {
+      case Sim:
+        // Running in a simulation, only log to NetworkTables
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+
+      case Replay:
+        // Replaying a log, set up the source of the replay
+        setUseTiming(false); // Run the log as fast as possible
+        // Setup replay source and new log location
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
+
+      default:
+        // Assume real robot if nothing else is true, log to USB and NetworkTables
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+    }
+
+    // Start the logger
+    Logger.start();
+
+    // Initialize the RobotContainer
+    robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    field2d.setRobotPose(m_robotContainer.drive.getPose());
   }
 
   @Override
@@ -47,10 +91,10 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    autonomousCommand = robotContainer.getAutonomousCommand();
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
     }
   }
 
@@ -62,8 +106,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
   }
 
