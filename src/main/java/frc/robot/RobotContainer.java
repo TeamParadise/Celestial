@@ -65,9 +65,12 @@ public class RobotContainer {
     }
 
     configureBindings();
+    configureDefaultCommands();
   }
 
-  private void configureBindings() {
+  private void configureBindings() {}
+
+  private void configureDefaultCommands() {
     drive.setDefaultCommand(
         DriveCommands.driveArcade(
             drive, () -> -driverController.getLeftY(), driverController::getRightX));

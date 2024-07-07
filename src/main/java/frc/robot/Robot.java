@@ -125,8 +125,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void testPeriodic() {}
 
+  /** This function is called once when the robot is first started up. */
   @Override
-  public void testExit() {}
+  public void simulationInit() {}
+
+  /** This function is called periodically whilst in simulation. */
+  @Override
+  public void simulationPeriodic() {}
 
   // The following functions are to check the robot mode using the robotMode in Constants
   /**
