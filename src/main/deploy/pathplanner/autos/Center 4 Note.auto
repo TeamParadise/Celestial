@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Center 1 (Center Pick Up)"
+                  "pathName": "Center Speaker to Stage Note"
                 }
               }
             ]
@@ -39,7 +39,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note Center 2 (Center Shoot)"
+            "pathName": "Stage Note to Center Speaker"
           }
         },
         {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Center 3 (Amp Pick Up)"
+                  "pathName": "Center Speaker to Center Note"
                 }
               }
             ]
@@ -70,7 +70,38 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note Center 4 (Amp Shoot)"
+            "pathName": "Center Note to Center Speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Speaker"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center Speaker to Amp Note"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp Note to Center Speaker"
           }
         },
         {
