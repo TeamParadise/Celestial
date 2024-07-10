@@ -1,0 +1,112 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.5,
+      "y": 2.0
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake (No Timeout)"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Defense 1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Defense 2"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Toss"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake (No Timeout)"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Toss"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake (No Timeout)"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Toss"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake (No Timeout)"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Toss"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake (No Timeout)"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Toss"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
