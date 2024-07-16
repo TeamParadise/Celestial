@@ -43,11 +43,11 @@ public class Intake extends SubsystemBase {
 
   // Used to reduce false positives or negatives by making sure something is true for long enough.
   // This is used to detect if we are holding a note.
-  private final Debouncer noteDebouncer = new Debouncer(0.20, DebounceType.kBoth);
+  private final Debouncer noteDebouncer = new Debouncer(0.15, DebounceType.kBoth);
 
   // Create note holding current variable to allow it to be tuned
   private static final LoggedTunableNumber noteDistance =
-      new LoggedTunableNumber("Intake/NoteDistance", 300);
+      new LoggedTunableNumber("Intake/NoteDistance", 150);
 
   /** Class for controlling a basic dual-motor Intake. */
   public Intake(IntakeIO io) {

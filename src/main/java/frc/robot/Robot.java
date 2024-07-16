@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Mode;
@@ -73,10 +74,14 @@ public class Robot extends LoggedRobot {
 
     // Initialize the RobotContainer
     robotContainer = new RobotContainer();
+
+    // Start a camera server to stream camera data over NetworkTables
+    CameraServer.startAutomaticCapture();
   }
 
   @Override
   public void robotPeriodic() {
+    // Run the Command Scheduler on every loop
     CommandScheduler.getInstance().run();
   }
 

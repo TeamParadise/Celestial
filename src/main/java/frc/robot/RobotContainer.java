@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ManualCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.gyro.GyroIONavX;
@@ -74,13 +74,13 @@ public class RobotContainer {
         break;
     }
 
+    configureAutoCommands();
+    configureDriverController();
+    configureCoDriverController();
+    configureDefaultCommands();
+
     // Configure auto chooser
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    autoChooser.addOption("Drive SysId (Quas Forward)", drive.sysIdQuasistatic(Direction.kForward));
-
-    configureAutoCommands();
-    configureBindings();
-    configureDefaultCommands();
   }
 
   private void configureAutoCommands() {
@@ -103,12 +103,51 @@ public class RobotContainer {
             .withTimeout(5));
   }
 
-  private void configureBindings() {
-    driverController.a().whileTrue(new IntakeCommand(flywheels, intake));
-    driverController.b().onTrue(new ShootCommand(flywheels, intake));
+  private void configureDriverController() {
+    // Bindings for the ABXY buttons
+    // A Button - Shoot into Speaker
+    driverController.a().onTrue(new ShootCommand(flywheels, intake));
+    // X Button - Manual Shoot (for getting any really stuck notes out)
+    driverController
+        .x()
+        .onTrue(
+            new ManualCommand(
+                flywheels, intake, FlywheelsConstants.Presets.toss, IntakeConstants.Presets.feed));
+    // Y Button - Passing Shoot
+    driverController
+        .y()
+        .onTrue(
+            new ShootCommand(
+                flywheels, intake, FlywheelsConstants.Presets.pass, IntakeConstants.Presets.feed));
+  }
+
+  private void configureCoDriverController() {
+    // Bindings for the ABXY buttons
+    // A Button - Shoot into Amp
+    coDriverController
+        .a()
+        .onTrue(
+            new ShootCommand(
+                flywheels, intake, FlywheelsConstants.Presets.amp, IntakeConstants.Presets.feed));
+    // B Button - Auto Intake (ends when a note is detected in the intake)
+    coDriverController.b().whileTrue(new IntakeCommand(flywheels, intake));
+
+    // Bindings for triggers
+    // Left Trigger - Reverse Intake and Flywheels (shoot out of the back of robot)
+    coDriverController
+        .leftTrigger(0.5)
+        .whileTrue(
+            new ManualCommand(
+                flywheels,
+                intake,
+                FlywheelsConstants.Presets.retract,
+                IntakeConstants.Presets.retract));
+    // Right Trigger - Manual Intake (only ends when the button is let go)
+    coDriverController.rightTrigger(0.5).whileTrue(new ManualCommand(flywheels, intake));
   }
 
   private void configureDefaultCommands() {
+    // Set the drivetrain to be controlled via the driver controller joysticks
     drive.setDefaultCommand(
         DriveCommands.driveArcade(
             drive, () -> -driverController.getLeftY(), driverController::getRightX));

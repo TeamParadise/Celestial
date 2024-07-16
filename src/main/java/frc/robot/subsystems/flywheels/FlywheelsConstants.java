@@ -36,6 +36,7 @@ public class FlywheelsConstants {
     public static final double retract = -500;
     public static final double speaker = 4000;
     public static final double amp = 2000;
+    public static final double pass = 5500;
     public static final double toss = 500;
   }
 }
