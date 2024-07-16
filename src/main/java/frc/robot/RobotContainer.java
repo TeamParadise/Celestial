@@ -5,13 +5,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
@@ -28,6 +29,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.io.IntakeIO;
 import frc.robot.subsystems.intake.io.IntakeIOSparkMax;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /** Main robot class for setting controller bindings, and running commands. */
 public class RobotContainer {
@@ -39,6 +41,8 @@ public class RobotContainer {
   // Create controller(s)
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController coDriverController = new CommandXboxController(1);
+
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() {
     // Set up all the subsystems depending on real, simulation, or replay
@@ -69,6 +73,10 @@ public class RobotContainer {
         flywheels = new Flywheels(new FlywheelsIOSparkMax());
         break;
     }
+
+    // Configure auto chooser
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser.addOption("Drive SysId (Quas Forward)", drive.sysIdQuasistatic(Direction.kForward));
 
     configureAutoCommands();
     configureBindings();
@@ -107,6 +115,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return autoChooser.get();
   }
 }

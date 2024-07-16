@@ -11,7 +11,7 @@ import edu.wpi.first.math.util.Units;
 public class DriveConstants {
   // These will need to be changed
   public static final double trackWidth = Units.inchesToMeters(26.0);
-  public static final double gearRatio = 8.45;
+  public static final double gearRatio = 10.71;
   public static final double wheelRadius = Units.inchesToMeters(3.0);
 
   public static final double metersPerRotation = 2 * Math.PI * wheelRadius;

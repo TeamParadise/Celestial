@@ -5,8 +5,6 @@
 
 package frc.robot.subsystems.flywheels;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.flywheels.FlywheelsConstants.*;
 import frc.robot.subsystems.flywheels.io.FlywheelsIO;
@@ -20,10 +18,6 @@ public class Flywheels extends SubsystemBase {
   // FlywheelsIO objects
   private final FlywheelsIO io;
   private final FlywheelsIOInputsAutoLogged inputs = new FlywheelsIOInputsAutoLogged();
-
-  // Used to reduce false positives or negatives by making sure something is true for long enough.
-  // This is used to detect if we are holding a note.
-  private final Debouncer noteDebouncer = new Debouncer(0.10, DebounceType.kBoth);
 
   // Set PID values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber bottomP =
@@ -44,10 +38,6 @@ public class Flywheels extends SubsystemBase {
       new LoggedTunableNumber("Flywheels/Top/D", TopConstants.topD);
   private static final LoggedTunableNumber topF =
       new LoggedTunableNumber("Flywheels/Top/F", TopConstants.topF);
-
-  // Create note holding current variable to allow it to be tuned
-  private static final LoggedTunableNumber noteCurrent =
-      new LoggedTunableNumber("Intake/NoteCurrent", 45);
 
   /** Class for controlling a set of Flywheels. */
   public Flywheels(FlywheelsIO io) {
@@ -119,14 +109,5 @@ public class Flywheels extends SubsystemBase {
   @AutoLogOutput
   public double getFlywheelVelocity() {
     return (inputs.bottomVelocityRPM + inputs.topVelocityRPM) / 2;
-  }
-
-  /** Returns whether a note is currently being held in the intake. */
-  @AutoLogOutput(key = "Intake/HoldingNote")
-  public boolean isHoldingNote() {
-    // Get the average of the current of both motors, and make sure it is more than our minimum
-    // "note" holding current for at least 0.25 seconds
-    return noteDebouncer.calculate(
-        (inputs.bottomCurrentAmps + inputs.topCurrentAmps) / 2 > noteCurrent.get());
   }
 }

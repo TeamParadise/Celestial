@@ -58,7 +58,7 @@ public class IntakeCommand extends Command {
   @Override
   public boolean isFinished() {
     // If we think we are holding a note, we don't need to intake anymore
-    return flywheels.isHoldingNote();
+    return intake.isHoldingNote();
   }
 
   @Override

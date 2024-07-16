@@ -9,8 +9,10 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.I2C;
 import frc.robot.subsystems.intake.IntakeConstants.*;
 
 /** Intake IO implementation for a SPARK MAX (NEO) based intake. */
@@ -19,6 +21,9 @@ public class IntakeIOSparkMax implements IntakeIO {
   private final CANSparkMax bottomIntake =
       new CANSparkMax(BottomConstants.motorID, MotorType.kBrushless);
   private final CANSparkMax topIntake = new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
+
+  // Create color sensor object
+  private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
   // Get encoders for the motors
   private final RelativeEncoder bottomEncoder = bottomIntake.getEncoder();
@@ -71,6 +76,9 @@ public class IntakeIOSparkMax implements IntakeIO {
     inputs.topVelocityRPM = topEncoder.getVelocity();
     inputs.topAppliedVolts = topIntake.getAppliedOutput() * topIntake.getBusVoltage();
     inputs.topCurrentAmps = topIntake.getOutputCurrent();
+
+    // Set inputs for proximity sensor
+    inputs.proximitySensor = colorSensor.getProximity();
   }
 
   @Override

@@ -23,6 +23,9 @@ public interface IntakeIO {
     public double topVelocityRPM = 0.0;
     public double topAppliedVolts = 0.0;
     public double topCurrentAmps = 0.0;
+
+    // Proximity sensor inputs
+    public int proximitySensor = 0;
   }
 
   /** Updates the inputs inside an IntakeIOInputs to the latest values. */

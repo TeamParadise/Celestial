@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -113,7 +114,7 @@ public class Drive extends SubsystemBase {
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                null,
+                Volts.of(2).per(Seconds.of(1)),
                 null,
                 null,
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
