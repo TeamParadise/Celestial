@@ -5,21 +5,27 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.drive.DriveCommands;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.gyro.GyroIONavX;
 import frc.robot.subsystems.drive.io.DriveIO;
 import frc.robot.subsystems.drive.io.DriveIOSim;
 import frc.robot.subsystems.drive.io.DriveIOSparkMax;
 import frc.robot.subsystems.flywheels.Flywheels;
+import frc.robot.subsystems.flywheels.FlywheelsConstants;
 import frc.robot.subsystems.flywheels.io.FlywheelsIO;
 import frc.robot.subsystems.flywheels.io.FlywheelsIOSparkMax;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.io.IntakeIO;
 import frc.robot.subsystems.intake.io.IntakeIOSparkMax;
 
@@ -58,17 +64,41 @@ public class RobotContainer {
 
       default:
         // Assume real robot if nothing else is true, set up real hardware classes
-        drive = new Drive(new DriveIOSparkMax());
+        drive = new Drive(new DriveIOSparkMax(), new GyroIONavX());
         intake = new Intake(new IntakeIOSparkMax());
         flywheels = new Flywheels(new FlywheelsIOSparkMax());
         break;
     }
 
+    configureAutoCommands();
     configureBindings();
     configureDefaultCommands();
   }
 
-  private void configureBindings() {}
+  private void configureAutoCommands() {
+    // Intake commands
+    NamedCommands.registerCommand("Intake", new IntakeCommand(flywheels, intake).withTimeout(5));
+    NamedCommands.registerCommand("Intake (No Timeout)", new IntakeCommand(flywheels, intake));
+
+    // Shoot/toss commands
+    NamedCommands.registerCommand(
+        "Shoot Amp",
+        new ShootCommand(
+                flywheels, intake, FlywheelsConstants.Presets.amp, IntakeConstants.Presets.feed)
+            .withTimeout(5));
+    NamedCommands.registerCommand(
+        "Shoot Speaker", new ShootCommand(flywheels, intake).withTimeout(5));
+    NamedCommands.registerCommand(
+        "Toss",
+        new ShootCommand(
+                flywheels, intake, FlywheelsConstants.Presets.toss, IntakeConstants.Presets.feed)
+            .withTimeout(5));
+  }
+
+  private void configureBindings() {
+    driverController.a().whileTrue(new IntakeCommand(flywheels, intake));
+    driverController.b().onTrue(new ShootCommand(flywheels, intake));
+  }
 
   private void configureDefaultCommands() {
     drive.setDefaultCommand(

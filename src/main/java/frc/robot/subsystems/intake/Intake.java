@@ -5,8 +5,6 @@
 
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.IntakeConstants.*;
 import frc.robot.subsystems.intake.io.IntakeIO;
@@ -20,10 +18,6 @@ public class Intake extends SubsystemBase {
   // IntakeIO objects
   private final IntakeIO io;
   private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-
-  // Used to reduce false positives or negatives by making sure something is true for long enough.
-  // This is used to detect if we are holding a note.
-  private final Debouncer noteDebouncer = new Debouncer(0.25, DebounceType.kBoth);
 
   // Set PID values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber bottomP =
@@ -44,10 +38,6 @@ public class Intake extends SubsystemBase {
       new LoggedTunableNumber("Intake/Top/D", TopConstants.topD);
   private static final LoggedTunableNumber topF =
       new LoggedTunableNumber("Intake/Top/F", TopConstants.topF);
-
-  // Create note holding current variable to allow it to be tuned
-  private static final LoggedTunableNumber noteCurrent =
-      new LoggedTunableNumber("Intake/NoteCurrent", 45);
 
   /** Class for controlling a basic dual-motor Intake. */
   public Intake(IntakeIO io) {
@@ -119,14 +109,5 @@ public class Intake extends SubsystemBase {
   @AutoLogOutput
   public double getIntakeVelocity() {
     return (inputs.bottomVelocityRPM + inputs.topVelocityRPM) / 2;
-  }
-
-  /** Returns whether a note is currently being held in the intake. */
-  @AutoLogOutput(key = "Intake/HoldingNote")
-  public boolean isHoldingNote() {
-    // Get the average of the current of both motors, and make sure it is more than our minimum
-    // "note" holding current for at least 0.25 seconds
-    return noteDebouncer.calculate(
-        (inputs.bottomCurrentAmps + inputs.topCurrentAmps) / 2 > noteCurrent.get());
   }
 }

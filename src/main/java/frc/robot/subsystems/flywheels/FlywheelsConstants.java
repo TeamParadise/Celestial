@@ -12,10 +12,10 @@ public class FlywheelsConstants {
     public static int motorID = 7;
 
     // Bottom Flywheel Motor PIDF Values (need to be tuned)
-    public static final double bottomP = 0.0;
+    public static final double bottomP = 0.0001;
     public static final double bottomI = 0.0;
     public static final double bottomD = 0.0;
-    public static final double bottomF = 0.0;
+    public static final double bottomF = 0.00018;
   }
 
   /** Constants for the motor that controls the top set of flywheels. */
@@ -23,10 +23,10 @@ public class FlywheelsConstants {
     public static int motorID = 8;
 
     // Top Flywheel Motor PIDF Values (need to be tuned)
-    public static final double topP = 0.0;
+    public static final double topP = 0.0001;
     public static final double topI = 0.0;
     public static final double topD = 0.0;
-    public static final double topF = 0.0;
+    public static final double topF = 0.00018;
   }
 
   /** Preset speeds for the flywheels. */
@@ -34,6 +34,8 @@ public class FlywheelsConstants {
     // Need to be tuned
     public static final double intake = -1000;
     public static final double retract = -500;
-    public static final double shoot = 3000;
+    public static final double speaker = 4000;
+    public static final double amp = 2000;
+    public static final double toss = 500;
   }
 }

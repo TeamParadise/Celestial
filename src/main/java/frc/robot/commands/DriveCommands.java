@@ -3,7 +3,7 @@
 // Use of this source code is governed by the MIT License, which can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.commands.drive;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;

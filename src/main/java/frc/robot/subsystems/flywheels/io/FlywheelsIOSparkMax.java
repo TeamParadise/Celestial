@@ -43,6 +43,10 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
     bottomFlywheel.setIdleMode(IdleMode.kCoast);
     topFlywheel.setIdleMode(IdleMode.kCoast);
 
+    // Invert flywheel motors
+    bottomFlywheel.setInverted(true);
+    topFlywheel.setInverted(true);
+
     // Set our PIDF values for the bottom and top PID controllers
     bottomPID.setP(BottomConstants.bottomP);
     bottomPID.setI(BottomConstants.bottomI);
@@ -85,7 +89,7 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
   public void setSpeed(double flywheelSpeed) {
     // Set speed of both motors
     bottomFlywheel.set(flywheelSpeed);
-    bottomFlywheel.set(flywheelSpeed);
+    topFlywheel.set(flywheelSpeed);
   }
 
   @Override
