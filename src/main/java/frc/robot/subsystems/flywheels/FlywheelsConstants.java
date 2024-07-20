@@ -16,6 +16,7 @@ public class FlywheelsConstants {
     public static final double bottomI = 0.0;
     public static final double bottomD = 0.0;
     public static final double bottomF = 0.000175;
+    public static final double bottomIz = 0.0;
   }
 
   /** Constants for the motor that controls the top set of flywheels. */
@@ -27,6 +28,7 @@ public class FlywheelsConstants {
     public static final double topI = 0.0;
     public static final double topD = 0.0;
     public static final double topF = 0.000175;
+    public static final double topIz = 0.0;
   }
 
   /** Preset speeds for the flywheels. */

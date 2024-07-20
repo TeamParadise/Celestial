@@ -23,7 +23,7 @@ public class IntakeIOSparkMax implements IntakeIO {
   private final CANSparkMax topIntake = new CANSparkMax(TopConstants.motorID, MotorType.kBrushless);
 
   // Create color sensor object
-  private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+  private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
 
   // Get encoders for the motors
   private final RelativeEncoder bottomEncoder = bottomIntake.getEncoder();
@@ -106,20 +106,22 @@ public class IntakeIOSparkMax implements IntakeIO {
   }
 
   @Override
-  public void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF) {
+  public void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {
     // Set the PIDF values on the bottom PID controller
     bottomPID.setP(bottomP);
     bottomPID.setI(bottomI);
     bottomPID.setD(bottomD);
     bottomPID.setFF(bottomF);
+    bottomPID.setIZone(bottomIz);
   }
 
   @Override
-  public void setTopPIDF(double topP, double topI, double topD, double topF) {
+  public void setTopPIDF(double topP, double topI, double topD, double topF, double topIz) {
     // Set the PIDF values on the top PID controller
     topPID.setP(topP);
     topPID.setI(topI);
     topPID.setD(topD);
     topPID.setFF(topF);
+    topPID.setIZone(topIz);
   }
 }

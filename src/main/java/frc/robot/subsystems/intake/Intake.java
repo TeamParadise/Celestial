@@ -30,6 +30,8 @@ public class Intake extends SubsystemBase {
       new LoggedTunableNumber("Intake/Bottom/D", BottomConstants.bottomD);
   private static final LoggedTunableNumber bottomF =
       new LoggedTunableNumber("Intake/Bottom/F", BottomConstants.bottomF);
+  private static final LoggedTunableNumber bottomIz =
+      new LoggedTunableNumber("Intake/Bottom/Iz", BottomConstants.bottomIz);
 
   // Set PID values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber topP =
@@ -40,6 +42,8 @@ public class Intake extends SubsystemBase {
       new LoggedTunableNumber("Intake/Top/D", TopConstants.topD);
   private static final LoggedTunableNumber topF =
       new LoggedTunableNumber("Intake/Top/F", TopConstants.topF);
+  private static final LoggedTunableNumber topIz =
+      new LoggedTunableNumber("Intake/Top/Iz", TopConstants.topIz);
 
   // Used to reduce false positives or negatives by making sure something is true for long enough.
   // This is used to detect if we are holding a note.
@@ -63,18 +67,20 @@ public class Intake extends SubsystemBase {
     // Update PIDF values if changed in tuning mode
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setBottomPIDF(bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get()),
+        () -> io.setBottomPIDF(bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get(), bottomIz.get()),
         bottomP,
         bottomI,
         bottomD,
-        bottomF);
+        bottomF,
+        bottomIz);
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setTopPIDF(topP.get(), topI.get(), topD.get(), topF.get()),
+        () -> io.setTopPIDF(topP.get(), topI.get(), topD.get(), topF.get(), topIz.get()),
         topP,
         topI,
         topD,
-        topF);
+        topF,
+        topIz);
   }
 
   // Basic intake methods to be used in commands

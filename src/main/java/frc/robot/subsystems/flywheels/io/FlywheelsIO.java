@@ -50,8 +50,8 @@ public interface FlywheelsIO {
   default void setVelocity(double flywheelRPM) {}
 
   /** Change the PIDF values on the bottom set of flywheels. */
-  default void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF) {}
+  default void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {}
 
   /** Change the PIDF values on the top set of flywheels. */
-  default void setTopPIDF(double topP, double topI, double topD, double topF) {}
+  default void setTopPIDF(double topP, double topI, double topD, double topF, double topIz) {}
 }

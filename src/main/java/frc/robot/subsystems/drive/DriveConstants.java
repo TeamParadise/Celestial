@@ -27,13 +27,17 @@ public class DriveConstants {
     public static final double leftP = 0.0;
     public static final double leftI = 0.0;
     public static final double leftD = 0.0;
-    public static final double leftF = 0.002;
+    public static final double leftS = 0.0;
+    public static final double leftV = 0.0;
+    public static final double leftA = 0.0;
 
     // Right PIDF Values (need to be tuned)
     public static final double rightP = 0.0;
     public static final double rightI = 0.0;
     public static final double rightD = 0.0;
-    public static final double rightF = 0.002;
+    public static final double rightS = 0.0;
+    public static final double rightV = 0.0;
+    public static final double rightA = 0.0;
   }
 
   /** Constants used in the simulation. */

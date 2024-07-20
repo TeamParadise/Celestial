@@ -28,6 +28,8 @@ public class Flywheels extends SubsystemBase {
       new LoggedTunableNumber("Flywheels/Bottom/D", BottomConstants.bottomD);
   private static final LoggedTunableNumber bottomF =
       new LoggedTunableNumber("Flywheels/Bottom/F", BottomConstants.bottomF);
+  private static final LoggedTunableNumber bottomIz =
+      new LoggedTunableNumber("Flywheels/Bottom/Iz", BottomConstants.bottomIz);
 
   // Set PID values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber topP =
@@ -38,6 +40,8 @@ public class Flywheels extends SubsystemBase {
       new LoggedTunableNumber("Flywheels/Top/D", TopConstants.topD);
   private static final LoggedTunableNumber topF =
       new LoggedTunableNumber("Flywheels/Top/F", TopConstants.topF);
+  private static final LoggedTunableNumber topIz =
+      new LoggedTunableNumber("Flywheels/Top/Iz", TopConstants.topIz);
 
   /** Class for controlling a set of Flywheels. */
   public Flywheels(FlywheelsIO io) {
@@ -53,18 +57,20 @@ public class Flywheels extends SubsystemBase {
     // Update PIDF values if changed in tuning mode
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setBottomPIDF(bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get()),
+        () -> io.setBottomPIDF(bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get(), bottomIz.get()),
         bottomP,
         bottomI,
         bottomD,
-        bottomF);
+        bottomF,
+        bottomIz);
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setTopPIDF(topP.get(), topI.get(), topD.get(), topF.get()),
+        () -> io.setTopPIDF(topP.get(), topI.get(), topD.get(), topF.get(), topIz.get()),
         topP,
         topI,
         topD,
-        topF);
+        topF,
+        topIz);
   }
 
   // Basic flywheel methods to be used in commands

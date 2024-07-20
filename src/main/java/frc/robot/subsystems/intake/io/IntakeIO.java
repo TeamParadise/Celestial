@@ -53,8 +53,8 @@ public interface IntakeIO {
   default void setVelocity(double intakeRPM) {}
 
   /** Change the PIDF values on the bottom motor of the intake. */
-  default void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF) {}
+  default void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {}
 
   /** Change the PIDF values on the top motor of the intake. */
-  default void setTopPIDF(double topP, double topI, double topD, double topF) {}
+  default void setTopPIDF(double topP, double topI, double topD, double topF, double topIz) {}
 }
