@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
+import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.RealConstants;
@@ -38,7 +39,6 @@ public class DriveIOSparkMax implements DriveIO {
 
   // Create our feedforward controller
   private final DifferentialDriveFeedforward driveFeedforward = new DifferentialDriveFeedforward(RealConstants.driveLinearV, RealConstants.driveLinearA, RealConstants.driveAngularV, RealConstants.driveAngularA);
-  private double dtSeconds = 0.0;
 
   /** Drive IO implementation for a SPARK MAX (NEO) based drivetrain. */
   public DriveIOSparkMax() {
@@ -101,7 +101,15 @@ public class DriveIOSparkMax implements DriveIO {
 
   @Override
   public void setVelocity(double leftMetersPerSec, double rightMetersPerSec) {
-    leftLeader.setVoltage(leftPID.calculate((leftEncoder.getVelocity() * DriveConstants.metersPerRotation / 60), leftMetersPerSec) + driveFeedforward.calculate(leftMetersPerSec));
+    // Get the current speeds of the drivetrain
+    double currentLeftMetersPerSec = leftEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
+    double currentRightMetersPerSec = rightEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
+
+    // Calculate the feedforward values for the drivetrain
+    DifferentialDriveWheelVoltages feedforwardVoltages = driveFeedforward.calculate(currentLeftMetersPerSec, leftMetersPerSec, currentRightMetersPerSec, rightMetersPerSec, 0.02);
+
+    leftLeader.setVoltage(leftPID.calculate(currentLeftMetersPerSec, leftMetersPerSec) + feedforwardVoltages.left);
+    rightLeader.setVoltage(rightPID.calculate(currentRightMetersPerSec, rightMetersPerSec) + feedforwardVoltages.right);
   }
 
   @Override
@@ -111,20 +119,14 @@ public class DriveIOSparkMax implements DriveIO {
   }
 
   @Override
-  public void setLeftPIDF(double leftP, double leftI, double leftD, double leftF) {
-    // Set the PIDF values on the left PID controller
-    leftPID.setP(leftP);
-    leftPID.setI(leftI);
-    leftPID.setD(leftD);
-    leftPID.setFF(leftF);
+  public void setLeftPID(double leftP, double leftI, double leftD) {
+    // Set the PID values on the left PID and feedforward controller
+    leftPID.setPID(leftP, leftI, leftD);
   }
 
   @Override
-  public void setRightPIDF(double rightP, double rightI, double rightD, double rightF) {
-    // Set the PIDF values on the right PID controller
-    rightPID.setP(rightP);
-    rightPID.setI(rightI);
-    rightPID.setD(rightD);
-    rightPID.setFF(rightF);
+  public void setRightPID(double rightP, double rightI, double rightD) {
+    // Set the PID values on the right PID controller
+    rightPID.setPID(rightP, rightI, rightD);
   }
 }

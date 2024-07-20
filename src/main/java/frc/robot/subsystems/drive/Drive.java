@@ -54,23 +54,19 @@ public class Drive extends SubsystemBase {
 
   // Set PID values for the left drive to allow them to be tuned
   private static final LoggedTunableNumber leftP =
-      new LoggedTunableNumber("Drive/Left/P", RealConstants.leftP);
+      new LoggedTunableNumber("Drive/Left/P", RealConstants.driveP);
   private static final LoggedTunableNumber leftI =
-      new LoggedTunableNumber("Drive/Left/I", RealConstants.leftI);
+      new LoggedTunableNumber("Drive/Left/I", RealConstants.driveI);
   private static final LoggedTunableNumber leftD =
-      new LoggedTunableNumber("Drive/Left/D", RealConstants.leftD);
-  private static final LoggedTunableNumber leftF =
-      new LoggedTunableNumber("Drive/Left/F", RealConstants.leftF);
+      new LoggedTunableNumber("Drive/Left/D", RealConstants.driveD);
 
   // Set PID values for the right drive to allow them to be tuned
   private static final LoggedTunableNumber rightP =
-      new LoggedTunableNumber("Drive/Right/P", RealConstants.rightP);
+      new LoggedTunableNumber("Drive/Right/P", RealConstants.driveP);
   private static final LoggedTunableNumber rightI =
-      new LoggedTunableNumber("Drive/Right/I", RealConstants.rightI);
+      new LoggedTunableNumber("Drive/Right/I", RealConstants.driveI);
   private static final LoggedTunableNumber rightD =
-      new LoggedTunableNumber("Drive/Right/D", RealConstants.rightD);
-  private static final LoggedTunableNumber rightF =
-      new LoggedTunableNumber("Drive/Right/F", RealConstants.rightF);
+      new LoggedTunableNumber("Drive/Right/D", RealConstants.driveD);
 
   /** Class for controlling a Differential Drivetrain. */
   public Drive(DriveIO io, GyroIO gyroIO) {
@@ -130,21 +126,19 @@ public class Drive extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Drive", inputs);
 
-    // Update PIDF values if changed in tuning mode
+    // Update PID values if changed in tuning mode
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setLeftPIDF(leftP.get(), leftI.get(), leftD.get(), leftF.get()),
+        () -> io.setLeftPID(leftP.get(), leftI.get(), leftD.get()),
         leftP,
         leftI,
-        leftD,
-        leftF);
+        leftD);
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setRightPIDF(rightP.get(), rightI.get(), rightD.get(), rightF.get()),
+        () -> io.setRightPID(rightP.get(), rightI.get(), rightD.get()),
         rightP,
         rightI,
-        rightD,
-        rightF);
+        rightD);
 
     // Check to make sure if the robot is real
     if (Robot.isRealAK()) {
