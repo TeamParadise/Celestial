@@ -12,10 +12,10 @@ public class IntakeConstants {
     public static int motorID = 5;
 
     // Bottom Intake Motor PIDF Values (need to be tuned)
-    public static final double bottomP = 0.0001;
-    public static final double bottomI = 0.0;
+    public static final double bottomP = 0.00015;
+    public static final double bottomI = 0.000001;
     public static final double bottomD = 0.0;
-    public static final double bottomF = 0.0002;
+    public static final double bottomF = 0.000238;
   }
 
   /** Constants for the motor that controls the top part of the intake. */
@@ -23,10 +23,10 @@ public class IntakeConstants {
     public static int motorID = 6;
 
     // Top Intake Motor PIDF Values (need to be tuned)
-    public static final double topP = 0.0001;
-    public static final double topI = 0.0;
+    public static final double topP = 0.00015;
+    public static final double topI = 0.000001;
     public static final double topD = 0.0;
-    public static final double topF = 0.0002;
+    public static final double topF = 0.000238;
   }
 
   /** Preset speeds for the intake. */

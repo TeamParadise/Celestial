@@ -104,6 +104,8 @@ public class Drive extends SubsystemBase {
           var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
           driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
         },
+        1.9,
+        0.6,
         new ReplanningConfig(),
         () ->
             DriverStation.getAlliance().isPresent()

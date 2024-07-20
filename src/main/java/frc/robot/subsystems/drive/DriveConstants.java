@@ -10,7 +10,7 @@ import edu.wpi.first.math.util.Units;
 /** Constants used for the drivetrain of the robot. */
 public class DriveConstants {
   // These will need to be changed
-  public static final double trackWidth = Units.inchesToMeters(26.0);
+  public static final double trackWidth = Units.inchesToMeters(21.5);
   public static final double gearRatio = 10.71;
   public static final double wheelRadius = Units.inchesToMeters(3.0);
 
@@ -27,13 +27,13 @@ public class DriveConstants {
     public static final double leftP = 0.0;
     public static final double leftI = 0.0;
     public static final double leftD = 0.0;
-    public static final double leftF = 0.0;
+    public static final double leftF = 0.002;
 
     // Right PIDF Values (need to be tuned)
     public static final double rightP = 0.0;
     public static final double rightI = 0.0;
     public static final double rightD = 0.0;
-    public static final double rightF = 0.0;
+    public static final double rightF = 0.002;
   }
 
   /** Constants used in the simulation. */

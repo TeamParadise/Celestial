@@ -102,9 +102,6 @@ public class ShootCommand extends Command {
     // Calculate the time that has elapsed since the command has started
     timeElapsed += RobotController.getFPGATime() - previousTimestamp;
     previousTimestamp = RobotController.getFPGATime();
-
-    // test
-    System.out.println(timeElapsed);
   }
 
   @Override
