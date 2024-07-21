@@ -11,6 +11,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.RealConstants;
 
@@ -31,8 +33,12 @@ public class DriveIOSparkMax implements DriveIO {
   private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
 
   // Create our PID controllers
-  private final SparkPIDController leftPID = leftLeader.getPIDController();
-  private final SparkPIDController rightPID = rightLeader.getPIDController();
+  private final PIDController leftPID = new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
+  private final PIDController rightPID = new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
+
+  // Create our feedforward controller
+  private final DifferentialDriveFeedforward driveFeedforward = new DifferentialDriveFeedforward(RealConstants.driveLinearV, RealConstants.driveLinearA, RealConstants.driveAngularV, RealConstants.driveAngularA);
+  private double dtSeconds = 0.0;
 
   /** Drive IO implementation for a SPARK MAX (NEO) based drivetrain. */
   public DriveIOSparkMax() {
@@ -54,17 +60,6 @@ public class DriveIOSparkMax implements DriveIO {
     // Set follow motors to follow
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
-
-    // Set our PIDF values for both the left and right PID controllers
-    leftPID.setP(RealConstants.leftP);
-    leftPID.setI(RealConstants.leftI);
-    leftPID.setD(RealConstants.leftD);
-    leftPID.setFF(RealConstants.leftF);
-
-    rightPID.setP(RealConstants.rightP);
-    rightPID.setI(RealConstants.rightI);
-    rightPID.setD(RealConstants.rightD);
-    rightPID.setFF(RealConstants.rightF);
 
     // Burn settings to the flash of all the motors
     leftLeader.burnFlash();
@@ -106,14 +101,7 @@ public class DriveIOSparkMax implements DriveIO {
 
   @Override
   public void setVelocity(double leftMetersPerSec, double rightMetersPerSec) {
-    // I'm not sure how the REV "Motion Magic" alternative works (or if it's even still supported)
-    // might want to try it though
-
-    // Set the reference values of each PID controller
-    leftPID.setReference(
-        leftMetersPerSec / DriveConstants.metersPerRotation * 60, ControlType.kVelocity);
-    rightPID.setReference(
-        rightMetersPerSec / DriveConstants.metersPerRotation * 60, ControlType.kVelocity);
+    leftLeader.setVoltage(leftPID.calculate((leftEncoder.getVelocity() * DriveConstants.metersPerRotation / 60), leftMetersPerSec) + driveFeedforward.calculate(leftMetersPerSec));
   }
 
   @Override

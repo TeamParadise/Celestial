@@ -62,8 +62,8 @@ public interface DriveIO {
   default void setBrakeMode(boolean enable) {}
 
   /** Change the PIDF values on the left side of the drivetrain. */
-  default void setLeftPIDF(double leftP, double leftI, double leftD, double leftF) {}
+  default void setLeftPIDF(double leftP, double leftI, double leftD, double leftF, double leftS, double leftV, double leftA) {}
 
   /** Change the PIDF values on the right side of the drivetrain. */
-  default void setRightPIDF(double rightP, double rightI, double rightD, double rightF) {}
+  default void setRightPIDF(double rightP, double rightI, double rightD, double rightF, double rightS, double rightV, double rightA) {}
 }
