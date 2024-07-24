@@ -67,7 +67,9 @@ public class Intake extends SubsystemBase {
     // Update PIDF values if changed in tuning mode
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setBottomPIDF(bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get(), bottomIz.get()),
+        () ->
+            io.setBottomPIDF(
+                bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get(), bottomIz.get()),
         bottomP,
         bottomI,
         bottomD,

@@ -57,7 +57,9 @@ public class Flywheels extends SubsystemBase {
     // Update PIDF values if changed in tuning mode
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setBottomPIDF(bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get(), bottomIz.get()),
+        () ->
+            io.setBottomPIDF(
+                bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get(), bottomIz.get()),
         bottomP,
         bottomI,
         bottomD,
@@ -106,14 +108,40 @@ public class Flywheels extends SubsystemBase {
   public void setVelocity(double flywheelRPM) {
     // Log that we are running in closed-loop mode and log setpoints
     Logger.recordOutput("Flywheels/ClosedLoop/Active", true);
+    Logger.recordOutput("Flywheels/DifferentSetpoints", false);
     Logger.recordOutput("Flywheels/VelocitySetpointRPM", flywheelRPM);
 
     io.setVelocity(flywheelRPM);
+  }
+
+  /**
+   * Tell the flywheels to run in a closed-loop manner with velocity control.
+   *
+   * <p><font color="red"> Shouldn't be used directly without going through a Command. </font>
+   */
+  public void setVelocity(double bottomRPM, double topRPM) {
+    // Log that we are running in closed-loop mode and log setpoints
+    Logger.recordOutput("Flywheels/ClosedLoop/Active", true);
+    Logger.recordOutput("Flywheels/DifferentSetpoints", true);
+    Logger.recordOutput("Flywheels/VelocitySetpointRPM", bottomRPM);
+    Logger.recordOutput("Flywheels/TopVelocitySetpointRPM", topRPM);
+
+    io.setVelocity(bottomRPM, topRPM);
   }
 
   /** Returns the average velocity of the flywheels in rotations per minute (RPM). */
   @AutoLogOutput
   public double getFlywheelVelocity() {
     return (inputs.bottomVelocityRPM + inputs.topVelocityRPM) / 2;
+  }
+
+  /** Returns the velocity of the top flywheel in rotations per minute (RPM). */
+  public double getTopFlywheelVelocity() {
+    return inputs.topVelocityRPM;
+  }
+
+  /** Returns the velocity of the bottom flywheel in rotations per minute (RPM). */
+  public double getBottomFlywheelVelocity() {
+    return inputs.bottomVelocityRPM;
   }
 }

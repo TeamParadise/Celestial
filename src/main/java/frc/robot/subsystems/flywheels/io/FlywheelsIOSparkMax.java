@@ -103,7 +103,14 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
   }
 
   @Override
-  public void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {
+  public void setVelocity(double bottomRPM, double topRPM) {
+    bottomPID.setReference(bottomRPM, ControlType.kVelocity);
+    topPID.setReference(topRPM, ControlType.kVelocity);
+  }
+
+  @Override
+  public void setBottomPIDF(
+      double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {
     // Set the PIDF values on the bottom PID controller
     bottomPID.setP(bottomP);
     bottomPID.setI(bottomI);

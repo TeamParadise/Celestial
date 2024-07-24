@@ -106,7 +106,8 @@ public class IntakeIOSparkMax implements IntakeIO {
   }
 
   @Override
-  public void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {
+  public void setBottomPIDF(
+      double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {
     // Set the PIDF values on the bottom PID controller
     bottomPID.setP(bottomP);
     bottomPID.setI(bottomI);

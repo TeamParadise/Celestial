@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.AmpCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualCommand;
@@ -127,8 +128,7 @@ public class RobotContainer {
     coDriverController
         .a()
         .onTrue(
-            new ShootCommand(
-                flywheels, intake, FlywheelsConstants.Presets.amp, IntakeConstants.Presets.feed));
+            new AmpCommand(flywheels, intake));
     // B Button - Auto Intake (ends when a note is detected in the intake)
     coDriverController.b().whileTrue(new IntakeCommand(flywheels, intake));
 

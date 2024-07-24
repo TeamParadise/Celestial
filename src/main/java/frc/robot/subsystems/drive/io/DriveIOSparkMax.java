@@ -5,12 +5,10 @@
 
 package frc.robot.subsystems.drive.io;
 
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
 import edu.wpi.first.math.controller.PIDController;
@@ -34,11 +32,18 @@ public class DriveIOSparkMax implements DriveIO {
   private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
 
   // Create our PID controllers
-  private final PIDController leftPID = new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
-  private final PIDController rightPID = new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
+  private final PIDController leftPID =
+      new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
+  private final PIDController rightPID =
+      new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
 
   // Create our feedforward controller
-  private final DifferentialDriveFeedforward driveFeedforward = new DifferentialDriveFeedforward(RealConstants.driveLinearV, RealConstants.driveLinearA, RealConstants.driveAngularV, RealConstants.driveAngularA);
+  private final DifferentialDriveFeedforward driveFeedforward =
+      new DifferentialDriveFeedforward(
+          RealConstants.driveLinearV,
+          RealConstants.driveLinearA,
+          RealConstants.driveAngularV,
+          RealConstants.driveAngularA);
 
   /** Drive IO implementation for a SPARK MAX (NEO) based drivetrain. */
   public DriveIOSparkMax() {
@@ -102,14 +107,25 @@ public class DriveIOSparkMax implements DriveIO {
   @Override
   public void setVelocity(double leftMetersPerSec, double rightMetersPerSec) {
     // Get the current speeds of the drivetrain
-    double currentLeftMetersPerSec = leftEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
-    double currentRightMetersPerSec = rightEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
+    double currentLeftMetersPerSec =
+        leftEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
+    double currentRightMetersPerSec =
+        rightEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
 
     // Calculate the feedforward values for the drivetrain
-    DifferentialDriveWheelVoltages feedforwardVoltages = driveFeedforward.calculate(currentLeftMetersPerSec, leftMetersPerSec, currentRightMetersPerSec, rightMetersPerSec, 0.02);
+    DifferentialDriveWheelVoltages feedforwardVoltages =
+        driveFeedforward.calculate(
+            currentLeftMetersPerSec,
+            leftMetersPerSec,
+            currentRightMetersPerSec,
+            rightMetersPerSec,
+            0.02);
 
-    leftLeader.setVoltage(leftPID.calculate(currentLeftMetersPerSec, leftMetersPerSec) + feedforwardVoltages.left);
-    rightLeader.setVoltage(rightPID.calculate(currentRightMetersPerSec, rightMetersPerSec) + feedforwardVoltages.right);
+    leftLeader.setVoltage(
+        leftPID.calculate(currentLeftMetersPerSec, leftMetersPerSec) + feedforwardVoltages.left);
+    rightLeader.setVoltage(
+        rightPID.calculate(currentRightMetersPerSec, rightMetersPerSec)
+            + feedforwardVoltages.right);
   }
 
   @Override

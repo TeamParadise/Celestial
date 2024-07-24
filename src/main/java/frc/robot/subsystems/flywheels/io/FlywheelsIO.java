@@ -49,8 +49,17 @@ public interface FlywheelsIO {
    */
   default void setVelocity(double flywheelRPM) {}
 
+  /**
+   * Tell the flywheels to run in a closed-loop manner at a velocity setpoint.
+   *
+   * @param bottomRPM The bottom flywheel velocity to set. Value is in rotations per minute.
+   * @param topRPM The top flywheel velocity to set. Value is in rotations per minute.
+   */
+  default void setVelocity(double bottomRPM, double topRPM) {}
+
   /** Change the PIDF values on the bottom set of flywheels. */
-  default void setBottomPIDF(double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {}
+  default void setBottomPIDF(
+      double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {}
 
   /** Change the PIDF values on the top set of flywheels. */
   default void setTopPIDF(double topP, double topI, double topD, double topF, double topIz) {}

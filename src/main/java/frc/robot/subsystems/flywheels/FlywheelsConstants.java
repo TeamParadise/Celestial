@@ -36,8 +36,9 @@ public class FlywheelsConstants {
     // Need to be tuned
     public static final double intake = -1000;
     public static final double retract = -500;
-    public static final double speaker = 4000;
-    public static final double amp = 1500;
+    public static final double speaker = 5500;
+    // The amp value is the speed of the bottom flywheel, the top flywheel is slower.
+    public static final double amp = 1750;
     public static final double pass = 5500;
     public static final double toss = 500;
   }

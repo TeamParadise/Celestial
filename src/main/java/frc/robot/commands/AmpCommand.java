@@ -15,7 +15,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.util.LoggedTunableNumber;
 
-public class ShootCommand extends Command {
+public class AmpCommand extends Command {
   // Subsystems used in this command
   private final Flywheels flywheels;
   private final Intake intake;
@@ -24,9 +24,11 @@ public class ShootCommand extends Command {
   private final LoggedTunableNumber intakeRPM;
   private final LoggedTunableNumber flywheelRPM;
   private final LoggedTunableNumber flywheelSpeedupTime =
-      new LoggedTunableNumber("Commands/ShootCommand/FlywheelSpeedupTime", 400000);
+      new LoggedTunableNumber("Commands/AmpCommand/FlywheelSpeedupTime", 400000);
   private final LoggedTunableNumber intakeFeedTime =
-      new LoggedTunableNumber("Commands/ShootCommand/IntakeFeedTime", 4000000);
+      new LoggedTunableNumber("Commands/AmpCommand/IntakeFeedTime", 4000000);
+  private final LoggedTunableNumber topFlywheelSlowdown =
+      new LoggedTunableNumber("Commands/AmpCommand/TopFlywheelSlowDown", 250);
 
   // Create items to track the amount of time the command has been running for
   private double timeElapsed = 0.0;
@@ -34,26 +36,27 @@ public class ShootCommand extends Command {
 
   // Used to reduce false positives or negatives by making sure something is true for long enough.
   // This is used to detect if our flywheels are up to speed
-  private final Debouncer flywheelDebouncer = new Debouncer(0.08, DebounceType.kBoth);
+  private final Debouncer bottomDebouncer = new Debouncer(0.15, DebounceType.kBoth);
+  private final Debouncer topDebouncer = new Debouncer(0.15, DebounceType.kBoth);
 
-  public ShootCommand(Flywheels flywheels, Intake intake, double flywheelRPM, double intakeRPM) {
+  public AmpCommand(Flywheels flywheels, Intake intake, double flywheelRPM, double intakeRPM) {
     this.flywheels = flywheels;
     this.intake = intake;
 
-    this.flywheelRPM = new LoggedTunableNumber("Commands/ShootCommand/FlywheelRPM", flywheelRPM);
-    this.intakeRPM = new LoggedTunableNumber("Commands/ShootCommand/IntakeRPM", intakeRPM);
+    this.flywheelRPM = new LoggedTunableNumber("Commands/AmpCommand/FlywheelRPM", flywheelRPM);
+    this.intakeRPM = new LoggedTunableNumber("Commands/AmpCommand/IntakeRPM", intakeRPM);
 
     addRequirements(this.flywheels, this.intake);
   }
 
-  public ShootCommand(Flywheels flywheels, Intake intake) {
+  public AmpCommand(Flywheels flywheels, Intake intake) {
     this.flywheels = flywheels;
     this.intake = intake;
 
     // If no speed is provided, assume we are shooting into the speaker
     this.flywheelRPM =
         new LoggedTunableNumber(
-            "Commands/ShootCommand/FlywheelRPM", FlywheelsConstants.Presets.speaker);
+            "Commands/ShootCommand/FlywheelRPM", FlywheelsConstants.Presets.amp);
     this.intakeRPM =
         new LoggedTunableNumber("Commands/ShootCommand/IntakeRPM", IntakeConstants.Presets.feed);
 
@@ -74,19 +77,24 @@ public class ShootCommand extends Command {
   @Override
   public void execute() {
     // Set flywheel RPM and flywheel velocity for this loop
-    double currentFlywheelSetpoint = flywheelRPM.get();
-    double currentFlywheelVelocity = flywheels.getFlywheelVelocity();
+    double bottomFlywheelSetpoint = flywheelRPM.get();
+    double topFlywheelSetpoint = bottomFlywheelSetpoint - topFlywheelSlowdown.get();
+    double bottomFlywheelVelocity = flywheels.getBottomFlywheelVelocity();
+    double topFlywheelVelocity = flywheels.getTopFlywheelVelocity();
 
     // Set velocity of flywheels and intake depending on time elapsed here
     if (timeElapsed < 250000) {
       intake.setVelocity(IntakeConstants.Presets.retract);
     } else if (timeElapsed < 4000000
-        && !flywheelDebouncer.calculate(
-            currentFlywheelVelocity
-                    > currentFlywheelSetpoint - Math.pow(currentFlywheelSetpoint, 0.7)
-                && currentFlywheelVelocity
-                    < currentFlywheelSetpoint + Math.pow(currentFlywheelSetpoint, 0.7))) {
-      flywheels.setVelocity(currentFlywheelSetpoint);
+        && !bottomDebouncer.calculate(
+            bottomFlywheelVelocity > bottomFlywheelSetpoint - Math.pow(bottomFlywheelSetpoint, 0.55)
+                && bottomFlywheelVelocity
+                    < bottomFlywheelSetpoint + Math.pow(bottomFlywheelSetpoint, 0.55))
+        && !topDebouncer.calculate(
+            topFlywheelVelocity > topFlywheelSetpoint - Math.pow(topFlywheelSetpoint, 0.55)
+                && topFlywheelVelocity
+                    < topFlywheelSetpoint + Math.pow(topFlywheelSetpoint, 0.55))) {
+      flywheels.setVelocity(bottomFlywheelSetpoint, topFlywheelSetpoint);
       intake.setVelocity(0);
     } else {
       // Just set time elapsed to 4 seconds if it is not 4 seconds already, so there is 1 second
@@ -95,7 +103,7 @@ public class ShootCommand extends Command {
         timeElapsed = 4000000;
       }
 
-      flywheels.setVelocity(currentFlywheelSetpoint);
+      flywheels.setVelocity(bottomFlywheelSetpoint, topFlywheelSetpoint);
       intake.setVelocity(intakeRPM.get());
     }
 
