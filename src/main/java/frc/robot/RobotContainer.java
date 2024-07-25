@@ -125,10 +125,7 @@ public class RobotContainer {
   private void configureCoDriverController() {
     // Bindings for the ABXY buttons
     // A Button - Shoot into Amp
-    coDriverController
-        .a()
-        .onTrue(
-            new AmpCommand(flywheels, intake));
+    coDriverController.a().onTrue(new AmpCommand(flywheels, intake));
     // B Button - Auto Intake (ends when a note is detected in the intake)
     coDriverController.b().whileTrue(new IntakeCommand(flywheels, intake));
 

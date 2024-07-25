@@ -27,10 +27,10 @@ public class DriveConstants {
     public static final double driveP = 0.0;
     public static final double driveI = 0.0;
     public static final double driveD = 0.0;
-    public static final double driveLinearV = 0.0;
-    public static final double driveLinearA = 0.0;
-    public static final double driveAngularV = 0.0;
-    public static final double driveAngularA = 0.0;
+    public static final double driveLinearV = 0.0001;
+    public static final double driveLinearA = 0.0001;
+    public static final double driveAngularV = 0.0001;
+    public static final double driveAngularA = 0.0001;
   }
 
   /** Constants used in the simulation. */
