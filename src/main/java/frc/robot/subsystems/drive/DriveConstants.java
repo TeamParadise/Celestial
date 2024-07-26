@@ -23,25 +23,32 @@ public class DriveConstants {
     public static final int rightLeaderID = 3;
     public static final int rightFollowerID = 4;
 
-    // Drive PIDF values
-    public static final double driveP = 0.0;
-    public static final double driveI = 0.0;
-    public static final double driveD = 0.0;
-    public static final double driveLinearV = 0.0001;
-    public static final double driveLinearA = 0.0001;
-    public static final double driveAngularV = 0.0001;
-    public static final double driveAngularA = 0.0001;
+    // Left PIDF Values (need to be tuned)
+    public static final double leftP = 0.0;
+    public static final double leftI = 0.0;
+    public static final double leftD = 0.0;
+    public static final double leftF = 0.002;
+
+    // Right PIDF Values (need to be tuned)
+    public static final double rightP = 0.0;
+    public static final double rightI = 0.0;
+    public static final double rightD = 0.0;
+    public static final double rightF = 0.002;
   }
 
   /** Constants used in the simulation. */
   public static class SimConstants {
-    // Drive PIDF values
-    public static final double driveP = 0.0;
-    public static final double driveI = 0.0;
-    public static final double driveD = 0.0;
-    public static final double driveLinearV = 0.0;
-    public static final double driveLinearA = 0.0;
-    public static final double driveAngularV = 0.0;
-    public static final double driveAngularA = 0.0;
+    // Left PID Values (need to be tuned)
+    public static final double leftP = 0.0;
+    public static final double leftI = 0.0;
+    public static final double leftD = 0.0;
+
+    // Right PID Values (need to be tuned)
+    public static final double rightP = 0.0;
+    public static final double rightI = 0.0;
+    public static final double rightD = 0.0;
+
+    // Shared feedforward value
+    public static final double feedforward = 0.0;
   }
 }

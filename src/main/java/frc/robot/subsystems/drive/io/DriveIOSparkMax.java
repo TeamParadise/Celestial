@@ -5,13 +5,12 @@
 
 package frc.robot.subsystems.drive.io;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
-import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
-import edu.wpi.first.math.controller.PIDController;
+import com.revrobotics.SparkPIDController;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DriveConstants.RealConstants;
 
@@ -32,18 +31,8 @@ public class DriveIOSparkMax implements DriveIO {
   private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
 
   // Create our PID controllers
-  private final PIDController leftPID =
-      new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
-  private final PIDController rightPID =
-      new PIDController(RealConstants.driveP, RealConstants.driveI, RealConstants.driveD);
-
-  // Create our feedforward controller
-  private final DifferentialDriveFeedforward driveFeedforward =
-      new DifferentialDriveFeedforward(
-          RealConstants.driveLinearV,
-          RealConstants.driveLinearA,
-          RealConstants.driveAngularV,
-          RealConstants.driveAngularA);
+  private final SparkPIDController leftPID = leftLeader.getPIDController();
+  private final SparkPIDController rightPID = rightLeader.getPIDController();
 
   /** Drive IO implementation for a SPARK MAX (NEO) based drivetrain. */
   public DriveIOSparkMax() {
@@ -65,6 +54,17 @@ public class DriveIOSparkMax implements DriveIO {
     // Set follow motors to follow
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
+
+    // Set our PIDF values for both the left and right PID controllers
+    leftPID.setP(RealConstants.leftP);
+    leftPID.setI(RealConstants.leftI);
+    leftPID.setD(RealConstants.leftD);
+    leftPID.setFF(RealConstants.leftF);
+
+    rightPID.setP(RealConstants.rightP);
+    rightPID.setI(RealConstants.rightI);
+    rightPID.setD(RealConstants.rightD);
+    rightPID.setFF(RealConstants.rightF);
 
     // Burn settings to the flash of all the motors
     leftLeader.burnFlash();
@@ -106,26 +106,14 @@ public class DriveIOSparkMax implements DriveIO {
 
   @Override
   public void setVelocity(double leftMetersPerSec, double rightMetersPerSec) {
-    // Get the current speeds of the drivetrain
-    double currentLeftMetersPerSec =
-        leftEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
-    double currentRightMetersPerSec =
-        rightEncoder.getVelocity() * DriveConstants.metersPerRotation / 60;
+    // I'm not sure how the REV "Motion Magic" alternative works (or if it's even still supported)
+    // might want to try it though
 
-    // Calculate the feedforward values for the drivetrain
-    DifferentialDriveWheelVoltages feedforwardVoltages =
-        driveFeedforward.calculate(
-            currentLeftMetersPerSec,
-            leftMetersPerSec,
-            currentRightMetersPerSec,
-            rightMetersPerSec,
-            0.02);
-
-    leftLeader.setVoltage(
-        leftPID.calculate(currentLeftMetersPerSec, leftMetersPerSec) + feedforwardVoltages.left);
-    rightLeader.setVoltage(
-        rightPID.calculate(currentRightMetersPerSec, rightMetersPerSec)
-            + feedforwardVoltages.right);
+    // Set the reference values of each PID controller
+    leftPID.setReference(
+        leftMetersPerSec / DriveConstants.metersPerRotation * 60, ControlType.kVelocity);
+    rightPID.setReference(
+        rightMetersPerSec / DriveConstants.metersPerRotation * 60, ControlType.kVelocity);
   }
 
   @Override
@@ -135,14 +123,20 @@ public class DriveIOSparkMax implements DriveIO {
   }
 
   @Override
-  public void setLeftPID(double leftP, double leftI, double leftD) {
-    // Set the PID values on the left PID and feedforward controller
-    leftPID.setPID(leftP, leftI, leftD);
+  public void setLeftPIDF(double leftP, double leftI, double leftD, double leftF) {
+    // Set the PIDF values on the left PID controller
+    leftPID.setP(leftP);
+    leftPID.setI(leftI);
+    leftPID.setD(leftD);
+    leftPID.setFF(leftF);
   }
 
   @Override
-  public void setRightPID(double rightP, double rightI, double rightD) {
-    // Set the PID values on the right PID controller
-    rightPID.setPID(rightP, rightI, rightD);
+  public void setRightPIDF(double rightP, double rightI, double rightD, double rightF) {
+    // Set the PIDF values on the right PID controller
+    rightPID.setP(rightP);
+    rightPID.setI(rightI);
+    rightPID.setD(rightD);
+    rightPID.setFF(rightF);
   }
 }
