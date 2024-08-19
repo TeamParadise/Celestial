@@ -83,9 +83,9 @@ public class ShootCommand extends Command {
     } else if (timeElapsed < 4000000
         && !flywheelDebouncer.calculate(
             currentFlywheelVelocity
-                    > currentFlywheelSetpoint - Math.pow(currentFlywheelSetpoint, 0.7)
+                    > currentFlywheelSetpoint - Math.pow(currentFlywheelSetpoint, 0.55)
                 && currentFlywheelVelocity
-                    < currentFlywheelSetpoint + Math.pow(currentFlywheelSetpoint, 0.7))) {
+                    < currentFlywheelSetpoint + Math.pow(currentFlywheelSetpoint, 0.55))) {
       flywheels.setVelocity(currentFlywheelSetpoint);
       intake.setVelocity(0);
     } else {

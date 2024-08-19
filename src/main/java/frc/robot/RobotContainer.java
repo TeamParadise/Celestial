@@ -137,7 +137,8 @@ public class RobotContainer {
             new ManualCommand(
                 flywheels,
                 intake,
-                FlywheelsConstants.Presets.retract,
+                FlywheelsConstants.
+                    Presets.retract,
                 IntakeConstants.Presets.retract));
     // Right Trigger - Manual Intake (only ends when the button is let go)
     coDriverController.rightTrigger(0.5).whileTrue(new ManualCommand(flywheels, intake));
@@ -147,7 +148,7 @@ public class RobotContainer {
     // Set the drivetrain to be controlled via the driver controller joysticks
     drive.setDefaultCommand(
         DriveCommands.driveArcade(
-            drive, () -> -driverController.getLeftY(), driverController::getRightX));
+            drive, () -> driverController.getLeftY(), driverController::getRightX));
   }
 
   public Command getAutonomousCommand() {
