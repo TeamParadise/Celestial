@@ -38,7 +38,7 @@ public class FlywheelsConstants {
     public static final double retract = -500;
     public static final double speaker = 5000;
     // The amp value is the speed of the bottom flywheel, the top flywheel is slower.
-    public static final double amp = 2100;
+    public static final double amp = 2200;
     public static final double pass = 5500;
     public static final double toss = 500;
   }

@@ -32,13 +32,13 @@ public class DriveIOSim implements DriveIO {
 
   // Create PID controller for both sides (need to create some sort of sim pid values)
   private final PIDController leftPID =
-      new PIDController(SimConstants.driveP, SimConstants.driveI, SimConstants.driveD);
+      new PIDController(SimConstants.leftP, SimConstants.leftI, SimConstants.leftD);
   private final PIDController rightPID =
-      new PIDController(SimConstants.driveP, SimConstants.driveI, SimConstants.driveD);
+      new PIDController(SimConstants.leftP, SimConstants.leftI, SimConstants.leftD);
 
   // Create feedforward controller to calculate feedforward values
   private SimpleMotorFeedforward feedforward =
-      new SimpleMotorFeedforward(0, SimConstants.driveLinearV);
+      new SimpleMotorFeedforward(0, SimConstants.feedforward);
 
   // "Constructor" class, run when the class is first initialized
   public DriveIOSim(
@@ -128,14 +128,22 @@ public class DriveIOSim implements DriveIO {
   }
 
   @Override
-  public void setLeftPID(double leftP, double leftI, double leftD) {
-    // Set the PID values on the left PID controller
+  public void setLeftPIDF(double leftP, double leftI, double leftD, double leftF) {
+    // Set the PIDF values on the left PID controller
     leftPID.setPID(leftP, leftI, leftD);
+
+    // Note, the feedforward values are shared in simulation! So both left and right have the same
+    // feedforward values.
+    feedforward = new SimpleMotorFeedforward(0, leftF);
   }
 
   @Override
-  public void setRightPID(double rightP, double rightI, double rightD) {
-    // Set the PID values on the left PID controller
+  public void setRightPIDF(double rightP, double rightI, double rightD, double rightF) {
+    // Set the PIDF values on the left PID controller
     rightPID.setPID(rightP, rightI, rightD);
+
+    // Note, the feedforward values are shared in simulation! So both left and right have the same
+    // feedforward values.
+    feedforward = new SimpleMotorFeedforward(0, rightF);
   }
 }

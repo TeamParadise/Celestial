@@ -24,7 +24,7 @@ public class ShootCommand extends Command {
   private final LoggedTunableNumber intakeRPM;
   private final LoggedTunableNumber flywheelRPM;
   private final LoggedTunableNumber flywheelSpeedupTime =
-      new LoggedTunableNumber("Commands/ShootCommand/FlywheelSpeedupTime", 400000);
+      new LoggedTunableNumber("Commands/ShootCommand/FlywheelSpeedupTime", 450000);
   private final LoggedTunableNumber intakeFeedTime =
       new LoggedTunableNumber("Commands/ShootCommand/IntakeFeedTime", 4000000);
 
