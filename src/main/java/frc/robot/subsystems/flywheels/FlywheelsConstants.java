@@ -11,11 +11,13 @@ public class FlywheelsConstants {
   public static class BottomConstants {
     public static int motorID = 7;
 
-    // Bottom Flywheel Motor PIDF Values (need to be tuned)
-    public static final double bottomP = 0.0001;
+    // Bottom Flywheel Motor PIDF Values
+    public static final double bottomP = 0.0;
     public static final double bottomI = 0.0;
     public static final double bottomD = 0.0;
-    public static final double bottomF = 0.000175;
+    public static final double bottomS = 0.0;
+    public static final double bottomV = 0.0;
+    public static final double bottomA = 0.0;
     public static final double bottomIz = 0.0;
   }
 
@@ -23,21 +25,22 @@ public class FlywheelsConstants {
   public static class TopConstants {
     public static int motorID = 8;
 
-    // Top Flywheel Motor PIDF Values (need to be tuned)
-    public static final double topP = 0.0001;
+    // Top Flywheel Motor PIDF Values
+    public static final double topP = 0.0;
     public static final double topI = 0.0;
     public static final double topD = 0.0;
-    public static final double topF = 0.000175;
+    public static final double topS = 0.0;
+    public static final double topV = 0.0;
+    public static final double topA = 0.0;
     public static final double topIz = 0.0;
   }
 
   /** Preset speeds for the flywheels. */
   public static class Presets {
-    // Need to be tuned
     public static final double intake = -1000;
     public static final double retract = -500;
     public static final double speaker = 5000;
-    // The amp value is the speed of the bottom flywheel, the top flywheel is slower.
+    // The amp value is the speed of the bottom flywheel, the top flywheel is slower
     public static final double amp = 2200;
     public static final double pass = 5500;
     public static final double toss = 500;

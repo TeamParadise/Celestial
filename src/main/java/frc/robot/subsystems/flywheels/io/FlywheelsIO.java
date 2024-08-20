@@ -59,8 +59,8 @@ public interface FlywheelsIO {
 
   /** Change the PIDF values on the bottom set of flywheels. */
   default void setBottomPIDF(
-      double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {}
+      double bottomP, double bottomI, double bottomD, double bottomS, double bottomV, double bottomA, double bottomIz) {}
 
   /** Change the PIDF values on the top set of flywheels. */
-  default void setTopPIDF(double topP, double topI, double topD, double topF, double topIz) {}
+  default void setTopPIDF(double topP, double topI, double topD, double topS, double topV, double topA, double topIz) {}
 }

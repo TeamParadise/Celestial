@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.subsystems.flywheels.FlywheelsConstants.*;
 
 /** Flywheels IO implementation for a SPARK MAX (NEO) based set of flywheels. */
@@ -28,6 +29,10 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
   // Create our PID controllers
   private final SparkPIDController bottomPID = bottomFlywheel.getPIDController();
   private final SparkPIDController topPID = topFlywheel.getPIDController();
+
+  // Create our feedforward controllers
+  private SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(BottomConstants.bottomS, BottomConstants.bottomV, BottomConstants.bottomA);
+  private SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(TopConstants.topS, TopConstants.topV, TopConstants.topA);
 
   /** Flywheels IO implementation for a SPARK MAX (NEO) based set of flywheels. */
   public FlywheelsIOSparkMax() {
@@ -47,16 +52,13 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
     bottomFlywheel.setInverted(true);
     topFlywheel.setInverted(true);
 
-    // Set our PIDF values for the bottom and top PID controllers
+    // Set our PID values for the bottom and top PID controllers
     bottomPID.setP(BottomConstants.bottomP);
     bottomPID.setI(BottomConstants.bottomI);
     bottomPID.setD(BottomConstants.bottomD);
-    bottomPID.setFF(BottomConstants.bottomF);
-
     topPID.setP(TopConstants.topP);
     topPID.setI(TopConstants.topI);
     topPID.setD(TopConstants.topD);
-    topPID.setFF(TopConstants.topF);
 
     // Burn settings to the flash of the motors
     bottomFlywheel.burnFlash();
@@ -94,38 +96,39 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
 
   @Override
   public void setVelocity(double flywheelRPM) {
-    // I'm not sure how the REV "Motion Magic" alternative works (or if it's even still supported)
-    // might want to try it though
-
-    // Set the reference values of each PID controller
-    bottomPID.setReference(flywheelRPM, ControlType.kVelocity);
-    topPID.setReference(flywheelRPM, ControlType.kVelocity);
+    // Set the reference values of each PID controller, adding our own feedforward values
+    bottomPID.setReference(flywheelRPM, ControlType.kVelocity, 0, bottomFeedforward.calculate(bottomEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
+    topPID.setReference(flywheelRPM, ControlType.kVelocity, 0, topFeedforward.calculate(topEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
   }
 
   @Override
   public void setVelocity(double bottomRPM, double topRPM) {
-    bottomPID.setReference(bottomRPM, ControlType.kVelocity);
-    topPID.setReference(topRPM, ControlType.kVelocity);
+    bottomPID.setReference(bottomRPM, ControlType.kVelocity, 0, bottomFeedforward.calculate(bottomEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
+    topPID.setReference(topRPM, ControlType.kVelocity, 0, topFeedforward.calculate(topEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
   }
 
   @Override
   public void setBottomPIDF(
-      double bottomP, double bottomI, double bottomD, double bottomF, double bottomIz) {
-    // Set the PIDF values on the bottom PID controller
+      double bottomP, double bottomI, double bottomD, double bottomS, double bottomV, double bottomA, double bottomIz) {
+    // Set the PID values on the bottom PID controller
     bottomPID.setP(bottomP);
     bottomPID.setI(bottomI);
     bottomPID.setD(bottomD);
-    bottomPID.setFF(bottomF);
     bottomPID.setIZone(bottomIz);
+
+    // Set the feedforward values by creating a new bottom SimpleMotorFeedforward
+    bottomFeedforward = new SimpleMotorFeedforward(bottomS, bottomV, bottomA);
   }
 
   @Override
-  public void setTopPIDF(double topP, double topI, double topD, double topF, double topIz) {
-    // Set the PIDF values on the top PID controller
+  public void setTopPIDF(double topP, double topI, double topD, double topS, double topV, double topA, double topIz) {
+    // Set the PID values on the top PID controller
     topPID.setP(topP);
     topPID.setI(topI);
     topPID.setD(topD);
-    topPID.setFF(topF);
     topPID.setIZone(topIz);
+
+    // Set the feedforward values by creating a new top SimpleMotorFeedforward
+    topFeedforward = new SimpleMotorFeedforward(topS, topV, topA);
   }
 }

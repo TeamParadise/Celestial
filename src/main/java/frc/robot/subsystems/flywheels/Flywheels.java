@@ -19,27 +19,35 @@ public class Flywheels extends SubsystemBase {
   private final FlywheelsIO io;
   private final FlywheelsIOInputsAutoLogged inputs = new FlywheelsIOInputsAutoLogged();
 
-  // Set PID values for the bottom intake motor to allow them to be tuned
+  // Set PIDF values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber bottomP =
       new LoggedTunableNumber("Flywheels/Bottom/P", BottomConstants.bottomP);
   private static final LoggedTunableNumber bottomI =
       new LoggedTunableNumber("Flywheels/Bottom/I", BottomConstants.bottomI);
   private static final LoggedTunableNumber bottomD =
       new LoggedTunableNumber("Flywheels/Bottom/D", BottomConstants.bottomD);
-  private static final LoggedTunableNumber bottomF =
-      new LoggedTunableNumber("Flywheels/Bottom/F", BottomConstants.bottomF);
+  private static final LoggedTunableNumber bottomS =
+      new LoggedTunableNumber("Flywheels/Bottom/S", BottomConstants.bottomS);
+  private static final LoggedTunableNumber bottomV =
+      new LoggedTunableNumber("Flywheels/Bottom/V", BottomConstants.bottomV);
+  private static final LoggedTunableNumber bottomA =
+      new LoggedTunableNumber("Flywheels/Bottom/A", BottomConstants.bottomA);
   private static final LoggedTunableNumber bottomIz =
       new LoggedTunableNumber("Flywheels/Bottom/Iz", BottomConstants.bottomIz);
 
-  // Set PID values for the bottom intake motor to allow them to be tuned
+  // Set PIDF values for the bottom intake motor to allow them to be tuned
   private static final LoggedTunableNumber topP =
       new LoggedTunableNumber("Flywheels/Top/P", TopConstants.topP);
   private static final LoggedTunableNumber topI =
       new LoggedTunableNumber("Flywheels/Top/I", TopConstants.topI);
   private static final LoggedTunableNumber topD =
       new LoggedTunableNumber("Flywheels/Top/D", TopConstants.topD);
-  private static final LoggedTunableNumber topF =
-      new LoggedTunableNumber("Flywheels/Top/F", TopConstants.topF);
+  private static final LoggedTunableNumber topS =
+      new LoggedTunableNumber("Flywheels/Top/S", TopConstants.topS);
+  private static final LoggedTunableNumber topV =
+      new LoggedTunableNumber("Flywheels/Top/V", TopConstants.topV);
+  private static final LoggedTunableNumber topA =
+      new LoggedTunableNumber("Flywheels/Top/A", TopConstants.topA);
   private static final LoggedTunableNumber topIz =
       new LoggedTunableNumber("Flywheels/Top/Iz", TopConstants.topIz);
 
