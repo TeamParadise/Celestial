@@ -5,7 +5,12 @@
 
 package frc.robot.subsystems.flywheels;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.flywheels.FlywheelsConstants.*;
 import frc.robot.subsystems.flywheels.io.FlywheelsIO;
 import frc.robot.subsystems.flywheels.io.FlywheelsIOInputsAutoLogged;
@@ -19,7 +24,10 @@ public class Flywheels extends SubsystemBase {
   private final FlywheelsIO io;
   private final FlywheelsIOInputsAutoLogged inputs = new FlywheelsIOInputsAutoLogged();
 
-  // Set PIDF values for the bottom intake motor to allow them to be tuned
+  // Create a SysID object to run SysID routines
+  private SysIdRoutine sysId;
+
+  // Set PIDF values for the bottom flywheel motor to allow them to be tuned
   private static final LoggedTunableNumber bottomP =
       new LoggedTunableNumber("Flywheels/Bottom/P", BottomConstants.bottomP);
   private static final LoggedTunableNumber bottomI =
@@ -34,8 +42,10 @@ public class Flywheels extends SubsystemBase {
       new LoggedTunableNumber("Flywheels/Bottom/A", BottomConstants.bottomA);
   private static final LoggedTunableNumber bottomIz =
       new LoggedTunableNumber("Flywheels/Bottom/Iz", BottomConstants.bottomIz);
+  private static final LoggedTunableNumber bottomMaxAccel =
+      new LoggedTunableNumber("Flywheels/Bottom/MaxAccel", BottomConstants.bottomMaxAccel);
 
-  // Set PIDF values for the bottom intake motor to allow them to be tuned
+  // Set PIDF values for the top flywheel motor to allow them to be tuned
   private static final LoggedTunableNumber topP =
       new LoggedTunableNumber("Flywheels/Top/P", TopConstants.topP);
   private static final LoggedTunableNumber topI =
@@ -50,10 +60,23 @@ public class Flywheels extends SubsystemBase {
       new LoggedTunableNumber("Flywheels/Top/A", TopConstants.topA);
   private static final LoggedTunableNumber topIz =
       new LoggedTunableNumber("Flywheels/Top/Iz", TopConstants.topIz);
+  private static final LoggedTunableNumber topMaxAccel =
+      new LoggedTunableNumber("Flywheels/Top/MaxAccel", TopConstants.topMaxAccel);
 
   /** Class for controlling a set of Flywheels. */
   public Flywheels(FlywheelsIO io) {
+    // Set this classes IO objects equal to the provided IO classes
     this.io = io;
+
+    // Create a SysID routine
+    sysId =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.of(2).per(Seconds.of(1)),
+                null,
+                null,
+                (state) -> Logger.recordOutput("Flywheels/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism((voltage) -> setVolts(voltage.in(Volts)), null, this));
   }
 
   @Override
@@ -67,20 +90,42 @@ public class Flywheels extends SubsystemBase {
         hashCode(),
         () ->
             io.setBottomPIDF(
-                bottomP.get(), bottomI.get(), bottomD.get(), bottomF.get(), bottomIz.get()),
+                bottomP.get(),
+                bottomI.get(),
+                bottomD.get(),
+                bottomS.get(),
+                bottomV.get(),
+                bottomA.get(),
+                bottomIz.get(),
+                bottomMaxAccel.get()),
         bottomP,
         bottomI,
         bottomD,
-        bottomF,
-        bottomIz);
+        bottomS,
+        bottomV,
+        bottomA,
+        bottomIz,
+        bottomMaxAccel);
     LoggedTunableNumber.ifChanged(
         hashCode(),
-        () -> io.setTopPIDF(topP.get(), topI.get(), topD.get(), topF.get(), topIz.get()),
+        () ->
+            io.setTopPIDF(
+                topP.get(),
+                topI.get(),
+                topD.get(),
+                topS.get(),
+                topV.get(),
+                topA.get(),
+                topIz.get(),
+                topMaxAccel.get()),
         topP,
         topI,
         topD,
-        topF,
-        topIz);
+        topS,
+        topV,
+        topA,
+        topIz,
+        topMaxAccel);
   }
 
   // Basic flywheel methods to be used in commands
@@ -135,6 +180,16 @@ public class Flywheels extends SubsystemBase {
     Logger.recordOutput("Flywheels/TopVelocitySetpointRPM", topRPM);
 
     io.setVelocity(bottomRPM, topRPM);
+  }
+
+  /** Returns a command to run a quasistatic SysID test in the specified direction. */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysId.quasistatic(direction);
+  }
+
+  /** Returns a command to run a dynamic SysID test in the specified direction. */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysId.dynamic(direction);
   }
 
   /** Returns the average velocity of the flywheels in rotations per minute (RPM). */

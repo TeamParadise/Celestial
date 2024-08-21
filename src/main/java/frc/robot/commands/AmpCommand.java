@@ -55,8 +55,7 @@ public class AmpCommand extends Command {
 
     // If no speed is provided, assume we are shooting into the speaker
     this.flywheelRPM =
-        new LoggedTunableNumber(
-            "Commands/AmpCommand/FlywheelRPM", FlywheelsConstants.Presets.amp);
+        new LoggedTunableNumber("Commands/AmpCommand/FlywheelRPM", FlywheelsConstants.Presets.amp);
     this.intakeRPM =
         new LoggedTunableNumber("Commands/AmpCommand/IntakeRPM", IntakeConstants.Presets.feed);
 

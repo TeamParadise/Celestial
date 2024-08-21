@@ -31,8 +31,11 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
   private final SparkPIDController topPID = topFlywheel.getPIDController();
 
   // Create our feedforward controllers
-  private SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(BottomConstants.bottomS, BottomConstants.bottomV, BottomConstants.bottomA);
-  private SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(TopConstants.topS, TopConstants.topV, TopConstants.topA);
+  private SimpleMotorFeedforward bottomFeedforward =
+      new SimpleMotorFeedforward(
+          BottomConstants.bottomS, BottomConstants.bottomV, BottomConstants.bottomA);
+  private SimpleMotorFeedforward topFeedforward =
+      new SimpleMotorFeedforward(TopConstants.topS, TopConstants.topV, TopConstants.topA);
 
   /** Flywheels IO implementation for a SPARK MAX (NEO) based set of flywheels. */
   public FlywheelsIOSparkMax() {
@@ -59,6 +62,10 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
     topPID.setP(TopConstants.topP);
     topPID.setI(TopConstants.topI);
     topPID.setD(TopConstants.topD);
+
+    // Set the maximum acceleration of the bottom and top motors.
+    bottomPID.setSmartMotionMaxAccel(BottomConstants.bottomMaxAccel, 0);
+    topPID.setSmartMotionMaxAccel(TopConstants.topMaxAccel, 0);
 
     // Burn settings to the flash of the motors
     bottomFlywheel.burnFlash();
@@ -97,19 +104,47 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
   @Override
   public void setVelocity(double flywheelRPM) {
     // Set the reference values of each PID controller, adding our own feedforward values
-    bottomPID.setReference(flywheelRPM, ControlType.kVelocity, 0, bottomFeedforward.calculate(bottomEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
-    topPID.setReference(flywheelRPM, ControlType.kVelocity, 0, topFeedforward.calculate(topEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
+    bottomPID.setReference(
+        flywheelRPM,
+        ControlType.kSmartVelocity,
+        0,
+        bottomFeedforward.calculate(bottomEncoder.getVelocity()),
+        SparkPIDController.ArbFFUnits.kVoltage);
+    topPID.setReference(
+        flywheelRPM,
+        ControlType.kSmartVelocity,
+        0,
+        topFeedforward.calculate(topEncoder.getVelocity()),
+        SparkPIDController.ArbFFUnits.kVoltage);
   }
 
   @Override
   public void setVelocity(double bottomRPM, double topRPM) {
-    bottomPID.setReference(bottomRPM, ControlType.kVelocity, 0, bottomFeedforward.calculate(bottomEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
-    topPID.setReference(topRPM, ControlType.kVelocity, 0, topFeedforward.calculate(topEncoder.getVelocity()), SparkPIDController.ArbFFUnits.kVoltage);
+    // Set the reference values of each PID controller, adding our own feedforward values
+    bottomPID.setReference(
+        bottomRPM,
+        ControlType.kSmartVelocity,
+        0,
+        bottomFeedforward.calculate(bottomEncoder.getVelocity()),
+        SparkPIDController.ArbFFUnits.kVoltage);
+    topPID.setReference(
+        topRPM,
+        ControlType.kSmartVelocity,
+        0,
+        topFeedforward.calculate(topEncoder.getVelocity()),
+        SparkPIDController.ArbFFUnits.kVoltage);
   }
 
   @Override
   public void setBottomPIDF(
-      double bottomP, double bottomI, double bottomD, double bottomS, double bottomV, double bottomA, double bottomIz) {
+      double bottomP,
+      double bottomI,
+      double bottomD,
+      double bottomS,
+      double bottomV,
+      double bottomA,
+      double bottomIz,
+      double bottomMaxAccel) {
     // Set the PID values on the bottom PID controller
     bottomPID.setP(bottomP);
     bottomPID.setI(bottomI);
@@ -118,10 +153,21 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
 
     // Set the feedforward values by creating a new bottom SimpleMotorFeedforward
     bottomFeedforward = new SimpleMotorFeedforward(bottomS, bottomV, bottomA);
+
+    // Set the maximum acceleration to be used for Motion Magic Velocity or Smart Velocity
+    bottomPID.setSmartMotionMaxAccel(bottomMaxAccel, 0);
   }
 
   @Override
-  public void setTopPIDF(double topP, double topI, double topD, double topS, double topV, double topA, double topIz) {
+  public void setTopPIDF(
+      double topP,
+      double topI,
+      double topD,
+      double topS,
+      double topV,
+      double topA,
+      double topIz,
+      double topMaxAccel) {
     // Set the PID values on the top PID controller
     topPID.setP(topP);
     topPID.setI(topI);
@@ -130,5 +176,8 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
 
     // Set the feedforward values by creating a new top SimpleMotorFeedforward
     topFeedforward = new SimpleMotorFeedforward(topS, topV, topA);
+
+    // Set the maximum acceleration to be used for Motion Magic Velocity or Smart Velocity
+    topPID.setSmartMotionMaxAccel(topMaxAccel, 0);
   }
 }

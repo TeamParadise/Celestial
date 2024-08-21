@@ -19,6 +19,9 @@ public class FlywheelsConstants {
     public static final double bottomV = 0.0;
     public static final double bottomA = 0.0;
     public static final double bottomIz = 0.0;
+
+    // Maximum acceleration value for Motion Magic Velocity or Smart Velocity
+    public static final double bottomMaxAccel = 9000.0;
   }
 
   /** Constants for the motor that controls the top set of flywheels. */
@@ -33,6 +36,9 @@ public class FlywheelsConstants {
     public static final double topV = 0.0;
     public static final double topA = 0.0;
     public static final double topIz = 0.0;
+
+    // Maximum acceleration value for Motion Magic Velocity or Smart Velocity
+    public static final double topMaxAccel = 9000.0;
   }
 
   /** Preset speeds for the flywheels. */

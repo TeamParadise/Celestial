@@ -76,11 +76,12 @@ public class RobotContainer {
     }
 
     configureAutoCommands();
+    configureAutoChooser();
     configureDriverController();
     configureCoDriverController();
     configureDefaultCommands();
 
-    // Configure auto chooser
+    // Configure basic auto chooser with PathPlanner autos
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
@@ -102,6 +103,13 @@ public class RobotContainer {
         new ShootCommand(
                 flywheels, intake, FlywheelsConstants.Presets.toss, IntakeConstants.Presets.feed)
             .withTimeout(5));
+  }
+
+  private void configureAutoChooser() {
+    // Add SysID routines to the auto chooser, if we are in tuning mode
+    if (Constants.tuningMode) {
+      return;
+    }
   }
 
   private void configureDriverController() {
@@ -137,8 +145,7 @@ public class RobotContainer {
             new ManualCommand(
                 flywheels,
                 intake,
-                FlywheelsConstants.
-                    Presets.retract,
+                FlywheelsConstants.Presets.retract,
                 IntakeConstants.Presets.retract));
     // Right Trigger - Manual Intake (only ends when the button is let go)
     coDriverController.rightTrigger(0.5).whileTrue(new ManualCommand(flywheels, intake));
