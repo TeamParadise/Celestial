@@ -12,12 +12,12 @@ public class FlywheelsConstants {
     public static int motorID = 7;
 
     // Bottom Flywheel Motor PIDF Values
-    public static final double bottomP = 0.0;
+    public static final double bottomP = 0.000059987;
     public static final double bottomI = 0.0;
     public static final double bottomD = 0.0;
-    public static final double bottomS = 0.0;
-    public static final double bottomV = 0.0;
-    public static final double bottomA = 0.0;
+    public static final double bottomS = 0.34849;
+    public static final double bottomV = 0.0020871;
+    public static final double bottomA = 0.00022852;
     public static final double bottomIz = 0.0;
 
     // Maximum acceleration value for Motion Magic Velocity or Smart Velocity
@@ -29,12 +29,12 @@ public class FlywheelsConstants {
     public static int motorID = 8;
 
     // Top Flywheel Motor PIDF Values
-    public static final double topP = 0.0;
+    public static final double topP = 0.000055305;
     public static final double topI = 0.0;
     public static final double topD = 0.0;
-    public static final double topS = 0.0;
-    public static final double topV = 0.0;
-    public static final double topA = 0.0;
+    public static final double topS = 0.40977;
+    public static final double topV = 0.0020328;
+    public static final double topA = 0.00018081;
     public static final double topIz = 0.0;
 
     // Maximum acceleration value for Motion Magic Velocity or Smart Velocity

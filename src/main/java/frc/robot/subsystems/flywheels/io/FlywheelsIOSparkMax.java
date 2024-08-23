@@ -106,13 +106,13 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
     // Set the reference values of each PID controller, adding our own feedforward values
     bottomPID.setReference(
         flywheelRPM,
-        ControlType.kSmartVelocity,
+        ControlType.kVelocity,
         0,
         bottomFeedforward.calculate(bottomEncoder.getVelocity()),
         SparkPIDController.ArbFFUnits.kVoltage);
     topPID.setReference(
         flywheelRPM,
-        ControlType.kSmartVelocity,
+        ControlType.kVelocity,
         0,
         topFeedforward.calculate(topEncoder.getVelocity()),
         SparkPIDController.ArbFFUnits.kVoltage);
@@ -123,13 +123,13 @@ public class FlywheelsIOSparkMax implements FlywheelsIO {
     // Set the reference values of each PID controller, adding our own feedforward values
     bottomPID.setReference(
         bottomRPM,
-        ControlType.kSmartVelocity,
+        ControlType.kVelocity,
         0,
         bottomFeedforward.calculate(bottomEncoder.getVelocity()),
         SparkPIDController.ArbFFUnits.kVoltage);
     topPID.setReference(
         topRPM,
-        ControlType.kSmartVelocity,
+        ControlType.kVelocity,
         0,
         topFeedforward.calculate(topEncoder.getVelocity()),
         SparkPIDController.ArbFFUnits.kVoltage);

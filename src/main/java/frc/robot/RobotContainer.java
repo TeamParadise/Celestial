@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
@@ -76,13 +77,13 @@ public class RobotContainer {
     }
 
     configureAutoCommands();
-    configureAutoChooser();
     configureDriverController();
     configureCoDriverController();
     configureDefaultCommands();
 
     // Configure basic auto chooser with PathPlanner autos
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    configureAutoChooser();
   }
 
   private void configureAutoCommands() {
@@ -108,7 +109,14 @@ public class RobotContainer {
   private void configureAutoChooser() {
     // Add SysID routines to the auto chooser, if we are in tuning mode
     if (Constants.tuningMode) {
-      return;
+      autoChooser.addOption(
+          "Flywheels SysId 1 Forward", flywheels.sysIdQuasistatic(Direction.kForward));
+      autoChooser.addOption(
+          "Flywheels SysId 1 Backwards", flywheels.sysIdQuasistatic(Direction.kReverse));
+      autoChooser.addOption(
+          "Flywheels SysId 2 Forward", flywheels.sysIdDynamic(Direction.kForward));
+      autoChooser.addOption(
+          "Flywheels SysId 2 Backwards", flywheels.sysIdDynamic(Direction.kReverse));
     }
   }
 

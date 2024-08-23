@@ -13,7 +13,7 @@ public class Constants {
       BuildConstants.MAVEN_GROUP.equals("simulation")
           ? Mode.Sim
           : BuildConstants.MAVEN_GROUP.equals("replay") ? Mode.Replay : Mode.Real;
-  public static final boolean tuningMode = false;
+  public static final boolean tuningMode = true;
   public static final double loopPeriodSecs = 0.02;
 
   /** Constants to be used for the Xbox controllers for the robot */
