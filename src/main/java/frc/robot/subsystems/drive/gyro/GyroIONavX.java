@@ -36,7 +36,7 @@ public class GyroIONavX implements GyroIO {
     inputs.connected = gyro.isConnected();
 
     // Update normal odometry inputs
-    inputs.yaw = Rotation2d.fromDegrees(gyro.getAngle());
+    inputs.yaw = Rotation2d.fromDegrees(-gyro.getAngle());
     inputs.yawVelocityDegreesPerSecond = gyro.getRate();
 
     // Update the "queue" (would be used for >50hz odometry, but not used here, so just one value)

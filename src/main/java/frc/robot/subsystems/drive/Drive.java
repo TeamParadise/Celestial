@@ -104,9 +104,7 @@ public class Drive extends SubsystemBase {
           var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
           driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
         },
-        1.9,
-        0.6,
-        new ReplanningConfig(),
+        new ReplanningConfig(true, true),
         () ->
             DriverStation.getAlliance().isPresent()
                 && DriverStation.getAlliance().get() == Alliance.Red,
@@ -116,9 +114,9 @@ public class Drive extends SubsystemBase {
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.of(2).per(Seconds.of(1)),
+                Volts.of(3).per(Seconds.of(1)),
                 null,
-                null,
+                Seconds.of(4),
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> driveVolts(voltage.in(Volts), voltage.in(Volts)), null, this));

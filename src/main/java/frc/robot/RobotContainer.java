@@ -117,6 +117,13 @@ public class RobotContainer {
           "Flywheels SysId 2 Forward", flywheels.sysIdDynamic(Direction.kForward));
       autoChooser.addOption(
           "Flywheels SysId 2 Backwards", flywheels.sysIdDynamic(Direction.kReverse));
+
+      autoChooser.addOption(
+          "Drivetrain SysId 1 Forward", drive.sysIdQuasistatic(Direction.kForward));
+      autoChooser.addOption(
+          "Drivetrain SysId 1 Backwards", drive.sysIdQuasistatic(Direction.kReverse));
+      autoChooser.addOption("Drivetrain SysId 2 Forward", drive.sysIdDynamic(Direction.kForward));
+      autoChooser.addOption("Drivetrain SysId 2 Backwards", drive.sysIdDynamic(Direction.kReverse));
     }
   }
 
@@ -163,7 +170,7 @@ public class RobotContainer {
     // Set the drivetrain to be controlled via the driver controller joysticks
     drive.setDefaultCommand(
         DriveCommands.driveArcade(
-            drive, () -> driverController.getLeftY(), driverController::getRightX));
+            drive, () -> -driverController.getLeftY(), () -> -driverController.getRightX()));
   }
 
   public Command getAutonomousCommand() {

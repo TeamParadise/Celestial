@@ -28,7 +28,7 @@ public class AmpCommand extends Command {
   private final LoggedTunableNumber intakeFeedTime =
       new LoggedTunableNumber("Commands/AmpCommand/IntakeFeedTime", 4500000);
   private final LoggedTunableNumber topFlywheelSlowdown =
-      new LoggedTunableNumber("Commands/AmpCommand/TopFlywheelSlowDown", 1200);
+      new LoggedTunableNumber("Commands/AmpCommand/TopFlywheelSlowDown", 500);
 
   // Create items to track the amount of time the command has been running for
   private double timeElapsed = 0.0;

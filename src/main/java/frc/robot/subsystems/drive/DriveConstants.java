@@ -24,13 +24,13 @@ public class DriveConstants {
     public static final int rightFollowerID = 4;
 
     // Left PIDF Values (need to be tuned)
-    public static final double leftP = 0.0;
+    public static final double leftP = 0.00001;
     public static final double leftI = 0.0;
     public static final double leftD = 0.0;
     public static final double leftF = 0.002;
 
     // Right PIDF Values (need to be tuned)
-    public static final double rightP = 0.0;
+    public static final double rightP = 0.00001;
     public static final double rightI = 0.0;
     public static final double rightD = 0.0;
     public static final double rightF = 0.002;

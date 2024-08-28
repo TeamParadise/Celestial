@@ -48,8 +48,8 @@ public class DriveIOSparkMax implements DriveIO {
     rightLeader.setSmartCurrentLimit(60);
     rightFollower.setSmartCurrentLimit(60);
 
-    // Invert left side of the drivetrain
-    leftLeader.setInverted(true);
+    // Invert right side of the drivetrain
+    rightLeader.setInverted(true);
 
     // Set follow motors to follow
     leftFollower.follow(leftLeader);
