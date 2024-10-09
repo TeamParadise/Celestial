@@ -80,19 +80,19 @@ public class ShootCommand extends Command {
     // Set velocity of flywheels and intake depending on time elapsed here
     if (timeElapsed < 250000) {
       intake.setVelocity(IntakeConstants.Presets.retract);
-    } else if (timeElapsed < 4000000
+    } else if (timeElapsed < 2000000
         && !flywheelDebouncer.calculate(
             currentFlywheelVelocity
-                    > currentFlywheelSetpoint - Math.pow(currentFlywheelSetpoint, 0.55)
+                    > currentFlywheelSetpoint - Math.pow(currentFlywheelSetpoint, 0.50)
                 && currentFlywheelVelocity
-                    < currentFlywheelSetpoint + Math.pow(currentFlywheelSetpoint, 0.55))) {
+                    < currentFlywheelSetpoint + Math.pow(currentFlywheelSetpoint, 0.50))) {
       flywheels.setVelocity(currentFlywheelSetpoint);
       intake.setVelocity(0);
     } else {
       // Just set time elapsed to 4 seconds if it is not 4 seconds already, so there is 1 second
       // left to shoot the note
-      if (timeElapsed < 4000000) {
-        timeElapsed = 4000000;
+      if (timeElapsed < 2000000) {
+        timeElapsed = 2000000;
       }
 
       flywheels.setVelocity(currentFlywheelSetpoint);
@@ -106,7 +106,7 @@ public class ShootCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return timeElapsed >= 5000000;
+    return timeElapsed >= 3000000;
   }
 
   @Override

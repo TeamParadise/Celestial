@@ -17,7 +17,10 @@ import frc.robot.commands.AmpCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualCommand;
+import frc.robot.commands.PassNote;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootNote;
+import frc.robot.commands.auto.TimedTwoNote;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.gyro.GyroIONavX;
 import frc.robot.subsystems.drive.io.DriveIO;
@@ -125,6 +128,9 @@ public class RobotContainer {
       autoChooser.addOption("Drivetrain SysId 2 Forward", drive.sysIdDynamic(Direction.kForward));
       autoChooser.addOption("Drivetrain SysId 2 Backwards", drive.sysIdDynamic(Direction.kReverse));
     }
+
+    autoChooser.addOption(
+        "THIS THE AUTO USE THIS ONE!!!!!!", new TimedTwoNote(drive, intake, flywheels));
   }
 
   private void configureDriverController() {
@@ -138,11 +144,8 @@ public class RobotContainer {
             new ManualCommand(
                 flywheels, intake, FlywheelsConstants.Presets.toss, IntakeConstants.Presets.feed));
     // Y Button - Passing Shoot
-    driverController
-        .y()
-        .onTrue(
-            new ShootCommand(
-                flywheels, intake, FlywheelsConstants.Presets.pass, IntakeConstants.Presets.feed));
+    driverController.b().onTrue(new ShootNote(intake, flywheels));
+    driverController.y().onTrue(new PassNote(intake, flywheels));
   }
 
   private void configureCoDriverController() {

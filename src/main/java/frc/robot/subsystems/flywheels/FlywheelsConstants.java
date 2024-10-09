@@ -29,11 +29,11 @@ public class FlywheelsConstants {
     public static int motorID = 8;
 
     // Top Flywheel Motor PIDF Values
-    public static final double topP = 0.000055305;
+    public static final double topP = 0.00006;
     public static final double topI = 0.0;
     public static final double topD = 0.0;
     public static final double topS = 0.40977;
-    public static final double topV = 0.0020328;
+    public static final double topV = 0.0020871;
     public static final double topA = 0.00018081;
     public static final double topIz = 0.0;
 
@@ -45,9 +45,9 @@ public class FlywheelsConstants {
   public static class Presets {
     public static final double intake = -1000;
     public static final double retract = -500;
-    public static final double speaker = 4050;
+    public static final double speaker = 3250;
     // The amp value is the speed of the bottom flywheel, the top flywheel is slower
-    public static final double amp = 1550;
+    public static final double amp = 1200;
     public static final double pass = 5500;
     public static final double toss = 500;
   }

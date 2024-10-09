@@ -1,6 +1,5 @@
 //file:noinspection DependencyNotationArgument
 //file:noinspection UnnecessaryQualifiedReference
-//file:noinspection GroovyUnusedAssignment
 //file:noinspection GroovyAssignabilityCheck
 //file:noinspection SpellCheckingInspection
 plugins {

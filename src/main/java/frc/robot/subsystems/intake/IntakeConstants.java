@@ -34,8 +34,8 @@ public class IntakeConstants {
   /** Preset speeds for the intake. */
   public static class Presets {
     // Need to be tuned
-    public static final double intake = 1000;
-    public static final double retract = -500;
+    public static final double intake = 1500;
+    public static final double retract = -750;
     public static final double feed = 1000;
   }
 }

@@ -311,8 +311,8 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij+all,visualstudiocode,eclipse,netbeans,linux,macos,windows
 
-# Version file
-src/main/java/frc/robot/BuildConstants.java
+# File that stores the constants from the previous build
+BuildConstants.java
 
 # === Entries from WPILib team ===
 # The following gitignore entries have been specially created by the WPILib development team.
